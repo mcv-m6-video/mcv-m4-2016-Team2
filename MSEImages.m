@@ -1,8 +1,8 @@
 function [ MSEResults ] = MSEImages(testImages, groundTruth)
 
-    %cellfun(@immse, testImages, groundTruth, 'UniformOutput', false);
 
     for index = 1:length(testImages)
-        MSEResults(index) = immse(testImages(1), groundTruth(1));
+        [n, m, z] = size(testImages{index});
+        MSEResults(index) = sum(sum(sum((testImages{index} - groundTruth{index}).^2)))/(m*n*z);
     end
 end
