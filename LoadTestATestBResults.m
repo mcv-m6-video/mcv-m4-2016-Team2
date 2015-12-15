@@ -1,28 +1,19 @@
-function [ testAImages, testBImages ] = LoadTestATestBResults( cfg )
-%LOADTESTATESTBRESULTS Summary of this function goes here
-%   Detailed explanation goes here
+function [ testAImages, testBImages, idImage ] = LoadTestATestBResults( cfg )
+%LOADTESTATESTBRESULTS Load the results of Test A and Test B
 
-resultsFilenames = dir([ cfg.results_path, '*.png']);
+[testAImages, idImageA] = getImagesFromPath([ cfg.results_path, 'test_A_*.png']);
+[testBImages, idImageB] = getImagesFromPath([ cfg.results_path, 'test_B_*.png']);
 
-testAString = 'test_A';
-testBString = 'test_B';
+idImage = unique([idImageA , idImageB]);
 
-testAImages = {};
-testBImages = {};
-
-for index = 1:length(resultsFilenames)
-    filename = resultsFilenames(index).name;
-    image = imread( [cfg.results_path filename] );
-    
-    % if image name starts with test_A then its a testA image
-    if strncmp( filename, testAString, length(testAString))
-        testAImages{length(testAImages)+1} = image;
-    
-    elseif strncmp ( filename, testBString, length(testBString) )
-        testBImages{length(testBImages)+1} = image;
-        
+    function [images, idImage] = getImagesFromPath(path)
+        files = dir(path);
+        completePath  = cellfun(@(c)[cfg.results_path c],...
+                            {files.name},'UniformOutput',false);
+        images = cellfun(@imread, completePath, 'UniformOutput', false);
+        idImage = cellfun(@(c) c(8:end-4), ...
+                    {files.name},'UniformOutput',false);
     end
 end
-
 
 
