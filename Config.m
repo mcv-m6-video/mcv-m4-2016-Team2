@@ -4,19 +4,20 @@ function [ config ] = Config()
 
 
 %% MODIFY
-train_base_path = '../Highway';
-results_base_path = '../HighwayResults';
+path_highway = '../Highway';
 
-
-
+path_flow = '../opticalFlow';
 
 
 %%
 train_gt_folder = 'groundtruth/';
-results_folder = 'highway/';
+results_folder = 'results/';
 
-config.train_gt_path = [ train_base_path '/' train_gt_folder ];
-config.results_path = [ results_base_path '/' results_folder ];
+config.train_highway = [ path_highway '/' train_gt_folder ];
+config.results_highway = [ path_highway '/' results_folder ];
+
+config.gt_flow = [ path_flow '/' train_gt_folder ];
+config.results_flow = [ path_flow '/' results_folder ];
 
 %%
 % Plotly

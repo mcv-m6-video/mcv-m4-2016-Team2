@@ -6,11 +6,11 @@ completePath = {};
 % Load the GT for the given images, else load all images.
 if nargin == 2
     names = varargin{1};
-    completePath  = cellfun(@(c)[cfg.train_gt_path '/gt' c '.png'],...
+    completePath  = cellfun(@(c)[cfg.train_highway '/gt' c '.png'],...
                             names,'UniformOutput',false);
 else
-    files = dir([ cfg.train_gt_path, '*.png']);
-    completePath  = cellfun(@(c)[cfg.train_gt_path c],...
+    files = dir([ cfg.train_highway, '*.png']);
+    completePath  = cellfun(@(c)[cfg.train_highway c],...
                             {files.name},'UniformOutput',false);
 end
 

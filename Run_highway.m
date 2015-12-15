@@ -12,3 +12,4 @@ display('Test B.....');
 plotResults('TestA', TestA_evaluationSequence, TestA_evaluationFrame, cfg)
 plotResults('TestB', TestB_evaluationSequence, TestB_evaluationFrame, cfg)
 % [testABoundingBox] = ExtractBoundingBox(testAImages);
+
