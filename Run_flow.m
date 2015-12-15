@@ -1,5 +1,5 @@
 cfg = Config();
-
+ 
 GTPath = cfg.gt_flow;
 [groundTruth, gtNames] = LoadFlowResults(GTPath);
 
