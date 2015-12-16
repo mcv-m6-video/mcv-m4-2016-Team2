@@ -1,6 +1,7 @@
 function [evaluationFrame, evaluationSequence] = evaluation(setImages, setGT)
 
 TPtotal = []; FNtotal = []; FPtotal = []; TNtotal = [];
+ForegoundPxtotal = [];
 for idx_img = 1:length(setImages)
     image   = setImages{idx_img};
     gt      = setGT{idx_img};
@@ -9,12 +10,13 @@ for idx_img = 1:length(setImages)
 %     subplot(1, 2, 2); imshow(gt==255)
 %     pause(0.08)
     
-    [TPperFrame, FNperFrame, FPperFrame, TNperFrame] = evaluationPerFrame(image, gt);
+    [TPperFrame, FNperFrame, FPperFrame, TNperFrame, ForegroundPxperFrame] = evaluationPerFrame(image, gt);
     
     TPtotal = [TPtotal; TPperFrame];
     FNtotal = [FNtotal; FNperFrame];
     FPtotal = [FPtotal; FPperFrame];
     TNtotal = [TNtotal; TNperFrame]; 
+    ForegoundPxtotal = [ForegoundPxtotal; ForegroundPxperFrame];
 end
 
 % Evaluation per frame
@@ -29,6 +31,7 @@ evaluationFrame.TN = TNtotal;
 evaluationFrame.precision = precision;
 evaluationFrame.recall = recall;
 evaluationFrame.F = F;
+evaluationFrame.ForegroundPx = ForegoundPxtotal;
 
 % Evaluation per sequence
 TPtotal_val = sum(TPtotal);
