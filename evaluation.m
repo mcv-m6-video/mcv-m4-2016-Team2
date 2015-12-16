@@ -5,6 +5,10 @@ for idx_img = 1:length(setImages)
     image   = setImages{idx_img};
     gt      = setGT{idx_img};
     
+%     subplot(1, 2, 1); imshow(image==1)
+%     subplot(1, 2, 2); imshow(gt==255)
+%     pause(0.08)
+    
     [TPperFrame, FNperFrame, FPperFrame, TNperFrame] = evaluationPerFrame(image, gt);
     
     TPtotal = [TPtotal; TPperFrame];

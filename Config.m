@@ -19,10 +19,13 @@ config.results_highway = [ path_highway '/' results_folder ];
 config.gt_flow = [ path_flow '/' train_gt_folder ];
 config.results_flow = [ path_flow '/' results_folder ];
 
+%% Configuration parameters
+
+config.delay = 2
 %%
 % Plotly
 addpath(genpath('./MATLAB-api-master'))
-plotlysetup('Catlovers', 'o0elqap0f0')
+% plotlysetup('Catlovers', 'o0elqap0f0')
 
 config.plotly.activate = 0
 config.plotly.folder = 'M4/W1_T13/'

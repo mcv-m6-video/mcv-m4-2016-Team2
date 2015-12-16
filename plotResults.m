@@ -22,10 +22,10 @@ ylabel('F1 score');
 
 
 if cfg.plotly.activate
-    filename = [cfg.plotly.folder type '_G1_FperFrame'];
+    filename = [cfg.plotly.folder type cfg.delay '_G1_FperFrame'];
     response = fig2plotly(fig1, 'filename', 'matlab-semi-logy');
     plotly_url = response.url;
-    response = fig2plotly(fig1, 'filename', filename, 'fileopt', 'overwrite','strip', false);
+    response = fig2plotly(fig1, 'filename', filename, 'fileopt', 'overwrite','open', false, 'strip', false);
     plot_url = response.url
 end
 
@@ -44,7 +44,7 @@ plot([1:length(TNperFrame)], TNperFrame, 'r-')
 hold off
 
 if cfg.plotly.activate
-    filename = [cfg.plotly.folder type '_G2_FperFrame'];
-    response = fig2plotly(fig2, 'filename', filename, 'fileopt', 'overwrite', 'strip', false);
+    filename = [cfg.plotly.folder type cfg.delay '_G2_FperFrame'];
+    response = fig2plotly(fig2, 'filename', filename, 'fileopt', 'overwrite', 'open', false, 'strip', false);
     plot_url = response.url
 end

@@ -1,11 +1,10 @@
-function [ testAImages, testBImages, idImage ] = LoadTestATestBResults( cfg )
+function [ testAImages, testBImages, idImages ] = LoadTestATestBResults( cfg )
 %LOADTESTATESTBRESULTS Load the results of Test A and Test B
 
 [testAImages, idImageA] = getImagesFromPath([ cfg.results_highway, 'test_A_*.png']);
 [testBImages, idImageB] = getImagesFromPath([ cfg.results_highway, 'test_B_*.png']);
 
-idImage = unique([idImageA , idImageB]);
-
+idImages = idImageA;
     function [images, idImage] = getImagesFromPath(path)
         files = dir(path);
         completePath  = cellfun(@(c)[cfg.results_highway c],...

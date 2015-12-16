@@ -1,9 +1,10 @@
 cfg = Config();
 
 [testAImages, testBImages, idImages] = LoadTestATestBResults(cfg);
-[groundTruth] = LoadGroundTruth(cfg, idImages);
+[groundTruth, idImageGT] = LoadGroundTruth(cfg, idImages);
 
 display('Test A.....');
+
 [TestA_evaluationFrame, TestA_evaluationSequence] = evaluation(testAImages, groundTruth);
 
 display('Test B.....');
