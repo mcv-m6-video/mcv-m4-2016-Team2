@@ -11,12 +11,14 @@ path_flow = '../opticalFlow';
 
 %%
 train_gt_folder = 'groundtruth/';
+train_images_folder = 'images/';
 results_folder = 'results/';
 
 config.train_highway = [ path_highway '/' train_gt_folder ];
 config.results_highway = [ path_highway '/' results_folder ];
 
 config.gt_flow = [ path_flow '/' train_gt_folder ];
+config.images_flow = [ path_flow '/' train_images_folder ];
 config.results_flow = [ path_flow '/' results_folder ];
 
 %% Configuration parameters
