@@ -4,7 +4,7 @@ function [TP, FN, FP, TN, ForegroundPxperFrame] = evaluationPerFrame(image, gt)
 % gt      = gt > 0;
 
 TP = sum(sum(image > 0 & gt == 255));
-FP = sum(sum(image > 0 & gt == 0));
+FP = sum(sum(image > 0 & (gt == 0 | gt == 50)));
 FN = sum(sum(image == 0 & gt == 255));
-TN = sum(sum(image == 0 & gt == 0));
+TN = sum(sum(image == 0 & (gt == 0 | gt == 50)));
 ForegroundPxperFrame = sum(sum(gt == 255));

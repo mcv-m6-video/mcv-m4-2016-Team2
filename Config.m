@@ -23,7 +23,7 @@ config.results_flow = [ path_flow '/' results_folder ];
 
 %% Configuration parameters
 
-config.delay = 2
+config.delay = 0
 %%
 % Plotly
 addpath(genpath('./MATLAB-api-master'))
