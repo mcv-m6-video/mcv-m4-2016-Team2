@@ -9,6 +9,11 @@ plot([1:size(evaluation2plot, 1)], evaluation2plot(:,1), 'b-')
 plot([1:size(evaluation2plot, 1)], evaluation2plot(:,2), 'r-')
 plot([1:size(evaluation2plot, 1)], evaluation2plot(:,3), 'g-')
 hold off
-
-title([type ' ']);
+legend('Precision', 'Recall', 'F1 measure')
 xlabel('delay (frames)');
+
+if cfg.plotly.activate
+    filename = [cfg.plotly.folder type '_OP6_evolution'];
+    response = fig2plotly(fig1, 'filename', filename, 'fileopt', 'overwrite', 'open', false);
+    plot_url = response.url
+end

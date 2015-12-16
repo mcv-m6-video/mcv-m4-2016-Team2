@@ -3,12 +3,13 @@ function [evaluationFrame, evaluationSequence] = evaluation(setImages, setGT)
 TPtotal = []; FNtotal = []; FPtotal = []; TNtotal = [];
 ForegoundPxtotal = [];
 for idx_img = 1:length(setImages)
+%     idx_img
     image   = setImages{idx_img};
     gt      = setGT{idx_img};
     
 %     subplot(1, 2, 1); imshow(image==1)
 %     subplot(1, 2, 2); imshow(gt==255)
-%     pause(0.08)
+%     pause()
     
     [TPperFrame, FNperFrame, FPperFrame, TNperFrame, ForegroundPxperFrame] = evaluationPerFrame(image, gt);
     

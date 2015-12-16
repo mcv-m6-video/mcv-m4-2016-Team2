@@ -21,8 +21,8 @@ PEPNResults = PEPN(testImages, groundTruth)
 for index = 1:length(testImages)
     
     % Read real image
-    [real_img, map] = imread([config.images_flow '/' result_img{index}(8:end)]);
+    [real_img, map] = imread([cfg.images_flow gtNames{index}]);
     
     % Plot Optical Flow results
-    plotOpticalFlow(real_img, map, result_img{index});
+    plotOpticalFlow(real_img, map, testImages{index});
 end

@@ -22,10 +22,8 @@ ylabel('F1 score');
 
 
 if cfg.plotly.activate
-    filename = [cfg.plotly.folder type cfg.delay '_G1_FperFrame'];
-    response = fig2plotly(fig1, 'filename', 'matlab-semi-logy');
-    plotly_url = response.url;
-    response = fig2plotly(fig1, 'filename', filename, 'fileopt', 'overwrite');
+    filename = [cfg.plotly.folder type '_' num2str(cfg.delay) '_G1_FperFrame'];
+    response = fig2plotly(fig1, 'filename', filename, 'fileopt', 'overwrite', 'open', false);
     plot_url = response.url
 end
 
@@ -34,17 +32,15 @@ TPperFrame = evaluationPerFrame.TP;
 FperFrame = evaluationPerFrame.ForegroundPx;
 
 fig2 = figure;
+plot([1:length(TPperFrame)],TPperFrame, 'b-', [1:length(FperFrame)],FperFrame, 'm-');
 title([type ' True Positive & Total Foreground pixels vs #frame']);
 xlabel('# frame');
 ylabel('# pixels');
-hold on
-plot([1:length(TPperFrame)], TPperFrame, 'b-')
-plot([1:length(FperFrame)], FperFrame, 'r-')
-hold off
 legend('True positive', 'Total foreground pixels')
 
 if cfg.plotly.activate
-    filename = [cfg.plotly.folder type cfg.delay '_G2_FperFrame'];
-    response = fig2plotly(fig2, 'filename', filename, 'fileopt', 'overwrite');
+    filename = [cfg.plotly.folder type '_' num2str(cfg.delay) '_G2_FperFrame'];
+    response = fig2plotly(fig2, 'filename', filename, 'fileopt', 'overwrite', 'open', false);
     plot_url = response.url
+
 end
