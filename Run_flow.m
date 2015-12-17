@@ -7,9 +7,9 @@ TestPath = cfg.results_flow;
 [testImages, ~] = LoadFlowResults(TestPath, gtNames);
 
 display('Computing MSE.....');
-MSEResults = MSEImages(testImages, groundTruth)
+[MSEResults, PEPNResults] = MSEImages(testImages, groundTruth)
 
-PEPNResults = PEPN(testImages, groundTruth)
+% PEPNResults = PEPN(testImages, groundTruth)
 
 %plotResults('TestB', TestB_evaluationSequence, TestB_evaluationFrame, cfg)
 % [testABoundingBox] = ExtractBoundingBox(testAImages);
