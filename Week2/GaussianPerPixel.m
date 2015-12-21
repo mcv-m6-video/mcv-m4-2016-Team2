@@ -2,8 +2,10 @@ function [ gaussian ] = GaussianPerPixel( images )
 %GAUSSIANPERPIXEL Summary of this function goes here
 %   Detailed explanation goes here
 
-gaussian.mean = mean(images, 3);
-gaussian.variance = variance(images, 3);
+imageStack = cat(3, images);
+
+gaussian.mean = mean(imageStack, 3);
+gaussian.variance = variance(imageStack, 3);
 
 
 end
