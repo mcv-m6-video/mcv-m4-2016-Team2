@@ -1,6 +1,7 @@
 function [evaluationFrame, evaluationSequence] = evaluation(setImages, setGT)
 
 TPtotal = []; FNtotal = []; FPtotal = []; TNtotal = [];
+AUCtotal = [];
 ForegoundPxtotal = [];
 for idx_img = 1:length(setImages)
 %     idx_img
@@ -18,6 +19,10 @@ for idx_img = 1:length(setImages)
     FPtotal = [FPtotal; FPperFrame];
     TNtotal = [TNtotal; TNperFrame]; 
     ForegoundPxtotal = [ForegoundPxtotal; ForegroundPxperFrame];
+    
+%     [~, ~, ~, AUCperFrame] = perfcurve(gt,image,255);
+%     AUCtotal = [AUCtotal; AUCperFrame];
+    
 end
 
 % Evaluation per frame
@@ -42,7 +47,7 @@ TNtotal_val = sum(TNtotal);
 
 precisionTotal = TPtotal_val /(TPtotal_val + FPtotal_val);
 recalllTotal = TPtotal_val /(TPtotal_val + FNtotal_val);
-
+AUCTotal = trapz(recalllTotal,precisionTotal);
 Ftotal =( 2*precisionTotal*recalllTotal )/(precisionTotal+recalllTotal);
 
 evaluationSequence.TP = TPtotal_val;
@@ -52,7 +57,4 @@ evaluationSequence.TN = TNtotal_val;
 evaluationSequence.precision = precisionTotal;
 evaluationSequence.recall = recalllTotal;
 evaluationSequence.F = Ftotal;
-
-
-
-
+evaluationSequence.AUC = AUCTotal;
