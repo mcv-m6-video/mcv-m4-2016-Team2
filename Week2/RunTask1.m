@@ -1,4 +1,6 @@
 cfg = Config;
 
 [highway, fall, traffic] = LoadDatabases(cfg);
-% gaussian = GaussianPerPixel( highway );
+highway.gaussian = GaussianPerPixel( highway.train );
+fall.gaussian = GaussianPerPixel( fall.train );
+traffic.gaussian = GaussianPerPixel( traffic.train );
