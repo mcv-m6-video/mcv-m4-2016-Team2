@@ -14,5 +14,14 @@ traffic.train = LoadImages(cfg.traffic.inputPath, cfg.traffic.trainFrames, 'in',
 traffic.test = LoadImages(cfg.traffic.inputPath, cfg.traffic.testFrames, 'in', 'jpg');
 traffic.gt = LoadImages(cfg.traffic.gtPath, cfg.traffic.testFrames, 'gt', 'png');
 
+if cfg.grayscale
+    highway.train = cellfun(@(c) double(rgb2gray(c)), highway.train, 'UniformOutput', false);
+    highway.test = cellfun(@(c) double(rgb2gray(c)), highway.test, 'UniformOutput', false);
+    
+    fall.train = cellfun(@(c) double(rgb2gray(c)), fall.train, 'UniformOutput', false);
+    fall.test = cellfun(@(c) double(rgb2gray(c)), fall.test, 'UniformOutput', false);
+    
+    traffic.train = cellfun(@(c) double(rgb2gray(c)), traffic.train, 'UniformOutput', false);
+    traffic.test = cellfun(@(c) double(rgb2gray(c)), traffic.test, 'UniformOutput', false);
 end
 

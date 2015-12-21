@@ -8,7 +8,7 @@ for idx_img = 1:length(setImages)
     image   = setImages{idx_img};
     gt      = setGT{idx_img};
     
-%     subplot(1, 2, 1); imshow(image==1)
+%     subplot(1, 2, 1); imshow(image==255)
 %     subplot(1, 2, 2); imshow(gt==255)
 %     pause()
     
@@ -47,7 +47,7 @@ TNtotal_val = sum(TNtotal);
 
 precisionTotal = TPtotal_val /(TPtotal_val + FPtotal_val);
 recalllTotal = TPtotal_val /(TPtotal_val + FNtotal_val);
-AUCTotal = trapz(recalllTotal,precisionTotal);
+% AUCTotal = trapz(recalllTotal,precisionTotal);
 Ftotal =( 2*precisionTotal*recalllTotal )/(precisionTotal+recalllTotal);
 
 evaluationSequence.TP = TPtotal_val;
@@ -57,4 +57,4 @@ evaluationSequence.TN = TNtotal_val;
 evaluationSequence.precision = precisionTotal;
 evaluationSequence.recall = recalllTotal;
 evaluationSequence.F = Ftotal;
-evaluationSequence.AUC = AUCTotal;
+% evaluationSequence.AUC = AUCTotal;

@@ -6,6 +6,8 @@ pathToHighway = '../../Data/highway/';
 pathToFall = '../../Data/fall/';
 pathToTraffic = '../../Data/traffic/';
 
+config.grayscale = true;
+
 highwayFrames = [1050 1350];
 fallFrames =    [1460 1560];
 trafficFrames = [950  1050];

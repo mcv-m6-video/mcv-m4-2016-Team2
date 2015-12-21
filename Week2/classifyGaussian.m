@@ -1,4 +1,4 @@
-function labeledImg = classifyGaussian(image, mean, variance, alpha)
+function labeledImg = ClassifyGaussian(image, mean, variance, alpha)
 % segment the foreground
 % background == 0 / foreground == 255
 
