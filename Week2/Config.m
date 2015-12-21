@@ -6,7 +6,12 @@ pathToHighway = '../../Data/highway/';
 pathToFall = '../../Data/fall/';
 pathToTraffic = '../../Data/traffic/';
 
+config.maxIterations = 20;
+config.minfDiff = 0.01;
+config.alpha = 1:0.5:7;
+config.rho = 0:0.05:1;
 config.grayscale = true;
+config.adaptative = true;
 
 highwayFrames = [1050 1350];
 fallFrames =    [1460 1560];
