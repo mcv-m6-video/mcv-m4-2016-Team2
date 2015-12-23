@@ -6,11 +6,15 @@ highway.gaussian = GaussianPerPixel( highway.train, cfg );
 %  fall.gaussian = GaussianPerPixel( fall.train );
 % traffic.gaussian = GaussianPerPixel( traffic.train );
 
-[highway] = RunSequence(highway, cfg)
-plotResults(highway, cfg)
+[highway] = RunSequenceNonAdaptive(highway, cfg);
+%showSequence(highway)
 
-% fall.evaluation = EvaluateAlpha(fall, cfg.alpha, cfg.adaptative, cfg.rho);
-% traffic.evaluation = EvaluateAlpha(traffic, cfg.alpha, cfg.adaptative, cfg.rho);
+[highway] = RunSequenceAdaptive(highway, cfg)
+%showSequence(highway, 'adaptive')
 
-% plot(cfg.alpha, extractfield(cell2mat(evaluationSequence), 'recall'))
-% ...
+plotResults_NonAdaptiveVSAdaptive(highway, cfg)
+%%
+% Show results adaptive vs non adaptive
+% CompareSequences(highway.test, highway.gt, ...
+%     highway.nonAdaptive.bestResult, highway.adaptive.bestResult);
+

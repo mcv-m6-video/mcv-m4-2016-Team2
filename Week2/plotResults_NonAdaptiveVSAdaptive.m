@@ -1,7 +1,7 @@
-function plotResults(sequence, cfg)
+function plotResults_NonAdaptiveVSAdaptive(sequence, cfg)
 
-evaluationSequenceNon = sequence.evaluation.nonRecursiveAlphaEvaluation;
-evaluationSequenceRec = sequence.evaluation.recursiveAlphaEvaluationMethod2;
+evaluationSequenceNon = sequence.nonAdaptive.alphaEvaluation;
+evaluationSequenceRec = sequence.adaptive.alphaEvaluation;
 
 recTP          = extractfield(cell2mat(evaluationSequenceRec), 'TP');
 recTN          = extractfield(cell2mat(evaluationSequenceRec), 'TN');
