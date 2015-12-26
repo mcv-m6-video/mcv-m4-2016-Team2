@@ -8,7 +8,7 @@ pathToTraffic = '../../Data/traffic/';
 
 config.maxIterations = 20;
 config.minfDiff = 0.01;
-config.alpha = 1:0.5:7;
+config.alpha = 1:0.1:7;
 config.rho = 0:0.05:1;
 config.grayscale = true;
 config.adaptative = true;
@@ -43,7 +43,7 @@ config.traffic.gtPath =  [ pathToTraffic 'groundtruth/' ];
 %%
 % Plotly
 addpath(genpath('./MATLAB-api-master'))
-% plotlysetup('Catlovers', 'o0elqap0f0')
+plotlysetup('CatLovers2', 'vq3m7xvk89')
 
 config.plotly.activate = 0
 config.plotly.folder = 'M4/W2/'

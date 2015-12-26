@@ -1,4 +1,4 @@
-function [sequence] = RunSequenceAdaptive(sequence, cfg)
+function [sequence] = RunSequenceNonAdaptive(sequence, cfg)
 
 [bestAlpha, sequence] = optimization(sequence);
 
