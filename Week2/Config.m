@@ -2,16 +2,20 @@ function [ config ] = Config()
 %CONFIG Summary of this function goes here
 %   Detailed explanation goes here
 
-pathToHighway = '../../Data/highway/';
-pathToFall = '../../Data/fall/';
-pathToTraffic = '../../Data/traffic/';
+config.pathToHighway = '../../Data/highway/';
+config.pathToFall = '../../Data/fall/';
+config.pathToTraffic = '../../Data/traffic/';
 
 config.maxIterations = 20;
 config.minfDiff = 0.01;
-config.alpha = 1:0.1:7;
+config.alpha = 0.1:0.1:7;
 config.rho = 0:0.05:1;
 config.grayscale = true;
 config.adaptative = true;
+
+% Optional 6 GMM
+config.learningRate = 0.001:0.05:1;
+config.numGaussians = 2:7;
 
 highwayFrames = [1050 1350];
 fallFrames =    [1460 1560];
@@ -31,13 +35,13 @@ config.highway.testFrames =    highwayMiddlePoint+1   :   highwayFrames(2);
 config.fall.testFrames =       fallMiddlePoint+1      :   fallFrames(2);
 config.traffic.testFrames =    trafficMiddlePoint+1   :   trafficFrames(2);
 
-config.highway.inputPath =  [ pathToHighway 'input/' ];
-config.fall.inputPath =     [ pathToFall 'input/' ];
-config.traffic.inputPath =  [ pathToTraffic 'input/' ];
+config.highway.inputPath =  [ config.pathToHighway 'input/' ];
+config.fall.inputPath =     [ config.pathToFall 'input/' ];
+config.traffic.inputPath =  [ config.pathToTraffic 'input/' ];
 
-config.highway.gtPath =  [ pathToHighway 'groundtruth/' ];
-config.fall.gtPath =     [ pathToFall 'groundtruth/' ];
-config.traffic.gtPath =  [ pathToTraffic 'groundtruth/' ];
+config.highway.gtPath =  [ config.pathToHighway 'groundtruth/' ];
+config.fall.gtPath =     [ config.pathToFall 'groundtruth/' ];
+config.traffic.gtPath =  [ config.pathToTraffic 'groundtruth/' ];
 
 
 %%

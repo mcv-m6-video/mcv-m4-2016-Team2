@@ -5,10 +5,11 @@ cfg = Config;
 
 display('Highway sequence............')
 highway.gaussian = GaussianPerPixel( highway.train, cfg );
-[highway] = RunSequenceNonAdaptive(highway, cfg);
-%showSequence(highway)
-[highway] = RunSequenceAdaptive(highway, cfg);
+% [highway] = RunSequenceNonAdaptive(highway, cfg);
+% %showSequence(highway)
+% [highway] = RunSequenceAdaptive(highway, cfg);
 %showSequence(highway, 'adaptive')
+[highway] = RunSequenceGMM(highway, cfg)
 
 display('Fall sequence................')
 fall.gaussian = GaussianPerPixel( fall.train, cfg );
@@ -26,6 +27,8 @@ traffic.gaussian = GaussianPerPixel( traffic.train, cfg );
 OPTPlot.legend  = {'Highway', 'Fall', 'Traffic'};
 OPTPlot.filename = 'F_non_recursive';
 OPTPlot.style   = {'r', 'b', 'm'};
+OPTPlot.xaxis = cfg.alpha;
+OPTPlot.xlabel  = 'threshold';
 % Plot F
 plotF(cfg, OPTPlot, highway.nonAdaptive.alphaEvaluation, ...
                     fall.nonAdaptive.alphaEvaluation,...
@@ -51,6 +54,8 @@ plotPrecisionRecall(cfg, OPTPlot3, highway.nonAdaptive.alphaEvaluation, ...
 OPTPlot.legend  = {'Highway', 'Fall', 'Traffic'};
 OPTPlot.filename = 'F_recursive';
 OPTPlot.style   = {'r', 'b', 'm'};
+OPTPlot.xaxis = cfg.alpha;
+OPTPlot.xlabel  = 'threshold';
 % Plot F
 plotF(cfg, OPTPlot, highway.adaptive.alphaEvaluation, ...
                     fall.adaptive.alphaEvaluation,...
@@ -71,11 +76,14 @@ plotPrecisionRecall(cfg, OPTPlot3, highway.adaptive.alphaEvaluation, ...
                     fall.adaptive.alphaEvaluation,...
                     traffic.adaptive.alphaEvaluation);
 
+
 %% Comparison non-recursive VS recursive
 OPTPlot.legend  = {'Highway non-recursive', 'Fall non-recursive', 'Traffic non-recursive',...
                     'Highway recursive', 'Fall recursive', 'Traffic recursive'};
 OPTPlot.filename = 'F_comparison';
 OPTPlot.style   = {'r', 'b', 'm', 'r--', 'b--', 'm--'};
+OPTPlot.xaxis = cfg.alpha;
+OPTPlot.xlabel  = 'threshold';
 % Plot F
 plotF(cfg, OPTPlot, highway.nonAdaptive.alphaEvaluation, ...
                     fall.nonAdaptive.alphaEvaluation,...
@@ -90,3 +98,33 @@ plotF(cfg, OPTPlot, highway.nonAdaptive.alphaEvaluation, ...
 % CompareSequences(highway.test, highway.gt, ...
 %     highway.nonAdaptive.bestResult, highway.adaptive.bestResult);
 
+%% Evaluation GMM
+% OPTPlot.title   = '';
+OPTPlot.legend  = {'Highway', 'Fall', 'Traffic'};
+OPTPlot.filename = 'F_GMM';
+OPTPlot.style   = {'r', 'b', 'm'};
+OPTPlot.xaxis = cfg.numGaussians;
+OPTPlot.xlabel  = 'number of Gaussians';
+% Plot F
+plotF(cfg, OPTPlot, highway.GMM.evaluation, ...
+                     fall.GMM.evaluation,...
+                     traffic.GMM.evaluation);
+
+ % Pixel-based evaluation          
+OPTPlot2.filename = 'EvalperPixel_GMM_highway';
+plotEvalperPixel(cfg, OPTPlot2, highway.GMM.evaluation);
+OPTPlot2.filename = 'EvalperPixel_GMM_fall';
+plotEvalperPixel(cfg, OPTPlot2, fall.GMM.evaluation);
+OPTPlot2.filename = 'EvalperPixel_GMM_traffic';
+plotEvalperPixel(cfg, OPTPlot2, traffic.GMM.evaluation);
+
+% Plot precision-recall
+OPTPlot3.legend  = {'Highway', 'Fall', 'Traffic'};
+OPTPlot3.filename = 'PR_GMM';
+plotPrecisionRecall(cfg, OPTPlot3, highway.GMM.evaluation, ...
+                    fall.GMM.evaluation,...
+                    traffic.GMM.evaluation);
+%% Comparison recursive VS GMM
+
+                    
+%
