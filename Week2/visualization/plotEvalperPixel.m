@@ -10,6 +10,8 @@ end
     toPlot(3, :) = extractfield(cell2mat(seq), 'FP');
     toPlot(4, :) = extractfield(cell2mat(seq), 'FN');
 
+    OPTPlot.x = repmat(OPTPlot.xaxis, [4, 1]);
+
 OPTPlot.style   = {'r', 'b', 'm', 'g'};
 OPTPlot.xlabel  = 'threshold';
 OPTPlot.ylabel  = 'number of pixels'

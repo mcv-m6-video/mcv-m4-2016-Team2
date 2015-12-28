@@ -13,14 +13,15 @@ highway.gaussian = GaussianPerPixel( highway.train, cfg );
 
 display('Fall sequence................')
 fall.gaussian = GaussianPerPixel( fall.train, cfg );
-[fall] = RunSequenceNonAdaptive(fall, cfg);
-[fall] = RunSequenceAdaptive(fall, cfg);
+% [fall] = RunSequenceNonAdaptive(fall, cfg);
+% [fall] = RunSequenceAdaptive(fall, cfg);
+[fall] = RunSequenceGMM(fall, cfg)
 
 display('Traffic sequence..............')
 traffic.gaussian = GaussianPerPixel( traffic.train, cfg );
-[traffic] = RunSequenceNonAdaptive(traffic, cfg);
-[traffic] = RunSequenceAdaptive(traffic, cfg);
-
+% [traffic] = RunSequenceNonAdaptive(traffic, cfg);
+% [traffic] = RunSequenceAdaptive(traffic, cfg);
+[traffic] = RunSequenceGMM(traffic, cfg)
 
 %% Evaluation non-recursive
 % OPTPlot.title   = '';
@@ -61,7 +62,8 @@ plotF(cfg, OPTPlot, highway.adaptive.alphaEvaluation, ...
                     fall.adaptive.alphaEvaluation,...
                     traffic.adaptive.alphaEvaluation);
 
- % Pixel-based evaluation          
+ % Pixel-based evaluation
+OPTPlot2.xaxis =  cfg.alpha;
 OPTPlot2.filename = 'EvalperPixel_recursive_highway';
 plotEvalperPixel(cfg, OPTPlot2, highway.adaptive.alphaEvaluation);
 OPTPlot2.filename = 'EvalperPixel_recursive_fall';
@@ -110,7 +112,8 @@ plotF(cfg, OPTPlot, highway.GMM.evaluation, ...
                      fall.GMM.evaluation,...
                      traffic.GMM.evaluation);
 
- % Pixel-based evaluation          
+ % Pixel-based evaluation    
+OPTPlot2.xaxis =  cfg.numGaussians;
 OPTPlot2.filename = 'EvalperPixel_GMM_highway';
 plotEvalperPixel(cfg, OPTPlot2, highway.GMM.evaluation);
 OPTPlot2.filename = 'EvalperPixel_GMM_fall';
