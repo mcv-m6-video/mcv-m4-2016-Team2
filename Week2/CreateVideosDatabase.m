@@ -1,7 +1,13 @@
 function CreateVideosDatabase()
-highwayFrames = [1050:1350];
-fallFrames =    [1460:1560];
-trafficFrames = [950:1050];
+config = Config();
+
+% highwayFrames   = config.highway.testFrames;
+% fallFrames      = config.fall.testFrames;
+% trafficFrames   = config.traffic.testFrames;
+
+highwayFrames = [1050: 1350];
+fallFrames =    [1460 :1560];
+trafficFrames = [950  :1050];
 
 rootDir = '../../Data/';
 createVideo(rootDir, 'Highway', highwayFrames);
