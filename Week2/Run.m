@@ -3,24 +3,49 @@ cfg = Config;
 
 [highway, fall, traffic] = LoadDatabases(cfg);
 
-display('Highway sequence............')
-highway.gaussian = GaussianPerPixel( highway.train, cfg );
-[highway] = RunSequenceNonAdaptive(highway, cfg);
-%showSequence(highway)
-[highway] = RunSequenceAdaptive(highway, cfg);
-%showSequence(highway, 'adaptive')
+if cfg.grayscale
+    display('Highway sequence............')
+    highway.gaussian = GaussianPerPixel( highway.train, cfg );
+    [highway] = RunSequenceNonAdaptive(highway, cfg);
+    %showSequence(highway)
+    [highway] = RunSequenceAdaptive(highway, cfg);
+    %showSequence(highway, 'adaptive')
 
-display('Fall sequence................')
-fall.gaussian = GaussianPerPixel( fall.train, cfg );
-[fall] = RunSequenceNonAdaptive(fall, cfg);
-[fall] = RunSequenceAdaptive(fall, cfg);
+    display('Fall sequence................')
+    fall.gaussian = GaussianPerPixel( fall.train, cfg );
+    [fall] = RunSequenceNonAdaptive(fall, cfg);
+    [fall] = RunSequenceAdaptive(fall, cfg);
 
-display('Traffic sequence..............')
-traffic.gaussian = GaussianPerPixel( traffic.train, cfg );
-[traffic] = RunSequenceNonAdaptive(traffic, cfg);
-[traffic] = RunSequenceAdaptive(traffic, cfg);
+    display('Traffic sequence..............')
+    traffic.gaussian = GaussianPerPixel( traffic.train, cfg );
+    [traffic] = RunSequenceNonAdaptive(traffic, cfg);
+    [traffic] = RunSequenceAdaptive(traffic, cfg);
 
-
+elseif cfg.yuv
+    [~, numChannels] = size(highway);
+    
+    for channel = 1: numChannels
+        
+        display('Highway sequence............')
+        %highway = arrayfun(@(c)GaussianPerPixel(c.train,cfg), highway, 'UniformOutput', false);
+        highway{channel}.gaussian = GaussianPerPixel( highway{channel}.train, cfg );
+        highway{channel} = RunSequenceNonAdaptive(highway{channel}, cfg);
+        %showSequence(highway)
+        %highway{channel} = RunSequenceAdaptive(highway{channel}, cfg);
+        %showSequence(highway, 'adaptive')
+        
+        display('Fall sequence................')
+        fall{channel}.gaussian = GaussianPerPixel( fall{channel}.train, cfg );
+        fall{channel} = RunSequenceNonAdaptive(fall{channel}, cfg);
+        %fall{channel} = RunSequenceAdaptive(fall{channel}, cfg);
+        
+        display('Traffic sequence..............')
+        traffic{channel}.gaussian = GaussianPerPixel( traffic{channel}.train, cfg );
+        traffic{channel} = RunSequenceNonAdaptive(traffic{channel}, cfg);
+        %traffic{channel} = RunSequenceAdaptive(traffic{channel}, cfg);
+    end
+    
+end
 %% Evaluation non-recursive
 % OPTPlot.title   = '';
 OPTPlot.legend  = {'Highway', 'Fall', 'Traffic'};

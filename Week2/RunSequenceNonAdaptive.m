@@ -11,10 +11,10 @@ function [bestAlpha, sequence] = optimization(sequence)
 
     [F,I] = sort(extractfield(cell2mat(alphaEvaluation), 'F'), 'descend');
     bestAlpha = cfg.alpha(I(1));
-    bestF = F(1)
+    bestF = F(1);
     
-    sequence.nonAdaptive.bestAlpha = bestAlpha
-    sequence.nonAdaptive.bestF = bestF
+    sequence.nonAdaptive.bestAlpha = bestAlpha;
+    sequence.nonAdaptive.bestF = bestF;
     sequence.nonAdaptive.alphaEvaluation = alphaEvaluation;
 end
 
