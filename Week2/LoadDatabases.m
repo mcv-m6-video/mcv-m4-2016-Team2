@@ -2,55 +2,49 @@ function [ highway, fall, traffic ] = LoadDatabases( cfg )
 %LOADDATABASES Summary of this function goes here
 %   Detailed explanation goes here
 
-<<<<<<< HEAD
 HWtrain = LoadImages(cfg.highway.inputPath, cfg.highway.trainFrames, 'in', 'jpg');
 HWtest = LoadImages(cfg.highway.inputPath, cfg.highway.testFrames, 'in', 'jpg');
 HWgt = LoadImages(cfg.highway.gtPath, cfg.highway.testFrames, 'gt', 'png');
 HWseqName = 'highway';
+HWnumTrainingFrames = length(cfg.highway.trainFrames);
+HWpathVideo = [cfg.pathToHighway 'video.avi'];
 
 Ftrain = LoadImages(cfg.fall.inputPath, cfg.fall.trainFrames, 'in', 'jpg');
 Ftest = LoadImages(cfg.fall.inputPath, cfg.fall.testFrames, 'in', 'jpg');
 Fgt = LoadImages(cfg.fall.gtPath, cfg.fall.testFrames, 'gt', 'png');
 FseqName = 'fall';
+FnumTrainingFrames = length(cfg.fall.trainFrames);
+FpathVideo = [cfg.pathToFall 'video.avi'];
 
 Ttrain = LoadImages(cfg.traffic.inputPath, cfg.traffic.trainFrames, 'in', 'jpg');
 Ttest = LoadImages(cfg.traffic.inputPath, cfg.traffic.testFrames, 'in', 'jpg');
 Tgt = LoadImages(cfg.traffic.gtPath, cfg.traffic.testFrames, 'gt', 'png');
 TseqName = 'traffic';
-=======
-highway.train = LoadImages(cfg.highway.inputPath, cfg.highway.trainFrames, 'in', 'jpg');
-highway.test = LoadImages(cfg.highway.inputPath, cfg.highway.testFrames, 'in', 'jpg');
-highway.gt = LoadImages(cfg.highway.gtPath, cfg.highway.testFrames, 'gt', 'png');
-highway.seqName = 'highway';
-highway.numTrainingFrames = length(cfg.highway.trainFrames);
-highway.pathVideo = [cfg.pathToHighway 'video.avi'];
+TnumTrainingFrames = length(cfg.traffic.trainFrames);
+TpathVideo = [cfg.pathToTraffic 'video.avi'];
 
-fall.train = LoadImages(cfg.fall.inputPath, cfg.fall.trainFrames, 'in', 'jpg');
-fall.test = LoadImages(cfg.fall.inputPath, cfg.fall.testFrames, 'in', 'jpg');
-fall.gt = LoadImages(cfg.fall.gtPath, cfg.fall.testFrames, 'gt', 'png');
-fall.seqName = 'fall';
-fall.numTrainingFrames = length(cfg.fall.trainFrames);
-fall.pathVideo = [cfg.pathToFall 'video.avi'];
-
-traffic.train = LoadImages(cfg.traffic.inputPath, cfg.traffic.trainFrames, 'in', 'jpg');
-traffic.test = LoadImages(cfg.traffic.inputPath, cfg.traffic.testFrames, 'in', 'jpg');
-traffic.gt = LoadImages(cfg.traffic.gtPath, cfg.traffic.testFrames, 'gt', 'png');
-traffic.seqName = 'traffic';
-traffic.numTrainingFrames = length(cfg.traffic.trainFrames);
-traffic.pathVideo = [cfg.pathToTraffic 'video.avi'];
->>>>>>> 229aab6cc1ca716c723e5c108860b1b1184bcb8b
 
 if cfg.grayscale
     highway.train = cellfun(@(c) double(rgb2gray(c)), HWtrain, 'UniformOutput', false);
     highway.test = cellfun(@(c) double(rgb2gray(c)), HWtest, 'UniformOutput', false);
     highway.gt = HWgt;
     highway.seqName = HWseqName;
+    highway.numTrainingFrames = HWnumTrainingFrames;
+    highway.pathVideo = HWpathVideo ;
     
     fall.train = cellfun(@(c) double(rgb2gray(c)), Ftrain, 'UniformOutput', false);
     fall.test = cellfun(@(c) double(rgb2gray(c)), Ftest, 'UniformOutput', false);
+    fall.gt = Fgt;
+    fall.seqName = FseqName;
+    fall.numTrainingFrames = FnumTrainingFrames;
+    fall.pathVideo = FpathVideo ;
     
     traffic.train = cellfun(@(c) double(rgb2gray(c)), Ttrain, 'UniformOutput', false);
     traffic.test = cellfun(@(c) double(rgb2gray(c)), Ttest, 'UniformOutput', false);
+    traffic.gt = Tgt;
+    traffic.seqName = TseqName;
+    traffic.numTrainingFrames = TnumTrainingFrames;
+    traffic.pathVideo = TpathVideo ;
 
 elseif cfg.yuv
     [highway{1}.train, highway{2}.train, highway{3}.train] = obtainYUV(HWtrain);
