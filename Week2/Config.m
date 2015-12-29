@@ -12,7 +12,9 @@ config.alpha = 0.1:0.1:7;
 config.rho = 0:0.05:1;
 config.grayscale = false;
 config.yuv = true;
-config.adaptative = true;
+config.adaptative = false;
+config.nonAdaptative = true;
+config.gmm = true;
 
 % Optional 6 GMM
 config.learningRate = 0.001:0.05:1;

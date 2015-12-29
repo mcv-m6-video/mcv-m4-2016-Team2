@@ -4,49 +4,79 @@ cfg = Config;
 [highway, fall, traffic] = LoadDatabases(cfg);
 
 if cfg.grayscale
-    display('Highway sequence............')
+    display('Grayscale............')
+    
     highway.gaussian = GaussianPerPixel( highway.train, cfg );
-    [highway] = RunSequenceNonAdaptive(highway, cfg);
-    %showSequence(highway)
-    [highway] = RunSequenceAdaptive(highway, cfg);
-    %showSequence(highway, 'adaptive')
-    [highway] = RunSequenceGMM(highway, cfg);
-
-    display('Fall sequence................')
     fall.gaussian = GaussianPerPixel( fall.train, cfg );
-    [fall] = RunSequenceNonAdaptive(fall, cfg);
-    [fall] = RunSequenceAdaptive(fall, cfg);
-    [fall] = RunSequenceGMM(fall, cfg);
-
-    display('Traffic sequence..............')
     traffic.gaussian = GaussianPerPixel( traffic.train, cfg );
-    [traffic] = RunSequenceNonAdaptive(traffic, cfg);
-    [traffic] = RunSequenceAdaptive(traffic, cfg);
-    [traffic] = RunSequenceGMM(traffic, cfg);
+
+    
+    if cfg.nonAdaptative
+        display('Non adaptative............')
+        display('Highway sequence............')
+        [highway] = RunSequenceNonAdaptive(highway, cfg);
+        %showSequence(highway)
+        display('Fall sequence................')
+        [fall] = RunSequenceNonAdaptive(fall, cfg);
+        display('Traffic sequence..............')
+        [traffic] = RunSequenceNonAdaptive(traffic, cfg);
+    end
+    
+    if cfg.adaptative
+        display('Adaptative............')
+        display('Highway sequence............')
+        [highway] = RunSequenceAdaptive(highway, cfg);
+        display('Fall sequence................')
+        [fall] = RunSequenceAdaptive(fall, cfg);
+        display('Traffic sequence..............')
+        [traffic] = RunSequenceAdaptive(traffic, cfg);
+    end
+    
+    if cfg.gmm
+        [highway] = RunSequenceGMM(highway, cfg);
+        [fall] = RunSequenceGMM(fall, cfg);
+        [traffic] = RunSequenceGMM(traffic, cfg);
+        
+    end
+   
+
 
 elseif cfg.yuv
     [~, numChannels] = size(highway);
-    
+    display('YUV............')
     for channel = 1: numChannels
         
-        display('Highway sequence............')
+        
         %highway = arrayfun(@(c)GaussianPerPixel(c.train,cfg), highway, 'UniformOutput', false);
         highway{channel}.gaussian = GaussianPerPixel( highway{channel}.train, cfg );
-        highway{channel} = RunSequenceNonAdaptive(highway{channel}, cfg);
-        %showSequence(highway)
-        %highway{channel} = RunSequenceAdaptive(highway{channel}, cfg);
-        %showSequence(highway, 'adaptive')
-        
-        display('Fall sequence................')
         fall{channel}.gaussian = GaussianPerPixel( fall{channel}.train, cfg );
-        fall{channel} = RunSequenceNonAdaptive(fall{channel}, cfg);
-        %fall{channel} = RunSequenceAdaptive(fall{channel}, cfg);
-        
-        display('Traffic sequence..............')
         traffic{channel}.gaussian = GaussianPerPixel( traffic{channel}.train, cfg );
-        traffic{channel} = RunSequenceNonAdaptive(traffic{channel}, cfg);
-        %traffic{channel} = RunSequenceAdaptive(traffic{channel}, cfg);
+        
+        if cfg.nonAdaptative
+            display('Non adaptative............')
+            display('Highway sequence............')
+            highway{channel} = RunSequenceNonAdaptive(highway{channel}, cfg);
+            display('Fall sequence................')
+            fall{channel} = RunSequenceNonAdaptive(fall{channel}, cfg);
+            display('Traffic sequence..............')
+            traffic{channel} = RunSequenceNonAdaptive(traffic{channel}, cfg);
+        end
+        %showSequence(highway)
+        if cfg.adaptative
+            display('Adaptative............')
+            display('Highway sequence............')
+            highway{channel} = RunSequenceAdaptive(highway{channel}, cfg);
+            display('Fall sequence................')
+            fall{channel} = RunSequenceAdaptive(fall{channel}, cfg);
+            display('Traffic sequence..............')
+            traffic{channel} = RunSequenceAdaptive(traffic{channel}, cfg);
+            %showSequence(highway, 'adaptive')
+        end
     end
+    highway = JoinChannels( highway, numChannels, cfg.nonAdaptative, cfg.adaptative );
+    fall = JoinChannels( fall, numChannels, cfg.nonAdaptative, cfg.adaptative );
+    traffic = JoinChannels( traffic, numChannels, cfg.nonAdaptative, cfg.adaptative );
+    
     
 end
 
