@@ -75,7 +75,6 @@ elseif cfg.yuv
     end
     
     save('before.mat');
-    
     highway = JoinChannels( highway, numChannels, cfg.nonAdaptative, cfg.adaptative );
     fall = JoinChannels( fall, numChannels, cfg.nonAdaptative, cfg.adaptative );
     traffic = JoinChannels( traffic, numChannels, cfg.nonAdaptative, cfg.adaptative );

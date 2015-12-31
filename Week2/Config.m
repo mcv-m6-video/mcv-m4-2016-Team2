@@ -6,13 +6,13 @@ config.pathToHighway = '../../Data/highway/';
 config.pathToFall = '../../Data/fall/';
 config.pathToTraffic = '../../Data/traffic/';
 
-config.maxIterations = 5; %20
+config.maxIterations = 10; %20
 config.minfDiff = 0.01;
 config.alpha = 0.1:0.1:7;
 config.rho = 0:0.05:1;
 config.grayscale = false;
 config.yuv = true;
-config.adaptative = false;
+config.adaptative = true;
 config.nonAdaptative = true;
 config.gmm = true;
 

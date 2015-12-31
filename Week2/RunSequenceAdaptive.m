@@ -12,7 +12,7 @@ function [sequence] = RunSequenceAdaptive(sequence, cfg)
 
         [F,I] = sort(extractfield(cell2mat(alphaEvaluation), 'F'), 'descend');
         bestAlpha = cfg.alpha(I(1));
-        bestF = F(1)
+        bestF = F(1);
         iterations = 0;
         fDiff = Inf;
         while (iterations < cfg.maxIterations && fDiff > cfg.minfDiff)
@@ -26,10 +26,10 @@ function [sequence] = RunSequenceAdaptive(sequence, cfg)
             [alphaEvaluation] = EvaluateAlpha(sequence, cfg.alpha, true, bestRho);
             [F,I] = sort(extractfield(cell2mat(alphaEvaluation), 'F'), 'descend');
             bestAlpha = cfg.alpha(I(1));
-            bestF = F(1)
+            bestF = F(1);
 
             iterations = iterations+1
-            fDiff = abs(oldBestF - bestF)
+            fDiff = abs(oldBestF - bestF);
         end
 
         sequence.adaptive.bestAlpha   = bestAlpha;

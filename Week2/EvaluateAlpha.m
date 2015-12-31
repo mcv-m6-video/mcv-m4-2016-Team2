@@ -10,7 +10,7 @@ sequenceEvaluation = cell(1, length(alpha));
 result = {};
 for alphaIndex = 1:length(alpha)
     for index = 1:length(sequence.test)
-        result{index} = classifyGaussian(sequence.test{index}, mean, stdDev, alpha(alphaIndex));
+        result{index} = ClassifyGaussian(sequence.test{index}, mean, stdDev, alpha(alphaIndex));
 
         if adaptative
             [mean, variance] = AdaptativeModel(mean, variance, result{index}, sequence.test{index}, rho);
