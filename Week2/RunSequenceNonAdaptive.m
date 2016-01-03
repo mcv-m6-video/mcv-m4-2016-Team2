@@ -8,8 +8,11 @@ function [bestAlpha, sequence] = optimization(sequence)
     
     % compute best inital alpha with non adaptative
     [alphaEvaluation] = EvaluateAlpha(sequence, cfg.alpha, false, 0);
-
-    [F,I] = sort(extractfield(cell2mat(alphaEvaluation), 'F'), 'descend');
+    
+    FValues = extractfield(cell2mat(alphaEvaluation), 'F');    
+    FValues = FValues(~isnan(FValues));
+    
+    [F,I] = sort(FValues, 'descend');
     bestAlpha = cfg.alpha(I(1));
     bestF = F(1);
     

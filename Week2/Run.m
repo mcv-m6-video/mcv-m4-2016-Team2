@@ -44,14 +44,13 @@ if cfg.grayscale
 elseif cfg.yuv
     [~, numChannels] = size(highway);
     display('YUV............')
-    for channel = 1: numChannels
-        
-        
+    for channel = 1: numChannels 
         %highway = arrayfun(@(c)GaussianPerPixel(c.train,cfg), highway, 'UniformOutput', false);
         highway{channel}.gaussian = GaussianPerPixel( highway{channel}.train, cfg );
         fall{channel}.gaussian = GaussianPerPixel( fall{channel}.train, cfg );
         traffic{channel}.gaussian = GaussianPerPixel( traffic{channel}.train, cfg );
-        
+    end
+    for channel = 1: numChannels
         if cfg.nonAdaptative
             display('Non adaptative............')
             display('Highway sequence............')
@@ -61,6 +60,8 @@ elseif cfg.yuv
             display('Traffic sequence..............')
             traffic{channel} = RunSequenceNonAdaptive(traffic{channel}, cfg);
         end
+    end
+    for channel = 1: numChannels
         %showSequence(highway)
         if cfg.adaptative
             display('Adaptative............')
