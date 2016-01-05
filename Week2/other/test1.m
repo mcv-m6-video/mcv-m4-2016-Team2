@@ -2,11 +2,11 @@
 
 
 % Cambiar 
-sequence = fall;
-inputPath = cfg.fall.inputPath;
-gtPath = cfg.fall.gtPath;
-testFrames = cfg.fall.testFrames;
-trainFrames = cfg.fall.trainFrames;
+sequence = highway;
+inputPath = cfg.highway.inputPath;
+gtPath = cfg.highway.gtPath;
+testFrames = cfg.highway.testFrames;
+trainFrames = cfg.highway.trainFrames;
 % FIN cambiar
 
 mean    = sequence.gaussian.mean;
@@ -22,16 +22,16 @@ alpha  = sequence.nonAdaptive.bestAlpha;
 %%%%%%%%%%%%%%%%%%%%%%
 % Plot train sequence
 % RGB image | grayscale image ; mean image | std image
-% figure;
-% for jj = 1:length(trainFrames)
-%     imageTrain = trainRGB{jj};
-%     subplot(2, 2, 1);imshow(imageTrain); freezeColors
-%     subplot(2, 2, 2);imshow(rgb2gray(imageTrain), [])
-%     subplot(2, 2, 3); imshow(mean/255, [])
-%     subplot(2, 2, 4); imshow(std/255, []);
-%     colormap jet
-%     pause
-% end
+figure;
+for jj = 1:length(trainFrames)
+    imageTrain = trainRGB{jj};
+    subplot(2, 2, 1);imshow(imageTrain); freezeColors
+    subplot(2, 2, 2);imshow(rgb2gray(imageTrain), [])
+    subplot(2, 2, 3); imshow(mean/255, [])
+    subplot(2, 2, 4); imshow(std/255, []);
+    colormap jet
+    pause
+end
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%

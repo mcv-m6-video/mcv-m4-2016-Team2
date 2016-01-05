@@ -14,7 +14,7 @@ for alphaIndex = 1:length(alpha)
 
         if adaptative
             [mean, variance] = AdaptativeModel(mean, variance, result{index}, sequence.test{index}, rho);
-            stdDev = sqrt(variance);
+            stdDev = sqrt(variance); 
         end
     end
     % save the evaluation in the corresponding index of iteration

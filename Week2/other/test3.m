@@ -2,11 +2,11 @@
 
 
 % Cambiar 
-sequence = fall;
-inputPath = cfg.fall.inputPath;
-gtPath = cfg.fall.gtPath;
-testFrames = cfg.fall.testFrames;
-trainFrames = cfg.fall.trainFrames;
+sequence = traffic;
+inputPath = cfg.traffic.inputPath;
+gtPath = cfg.traffic.gtPath;
+testFrames = cfg.traffic.testFrames;
+trainFrames = cfg.traffic.trainFrames;
 % FIN cambiar
 
 % mean    = sequence.gaussian.mean;

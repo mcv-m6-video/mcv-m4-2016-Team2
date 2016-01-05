@@ -6,19 +6,20 @@ config.pathToHighway = '../../Data/highway/';
 config.pathToFall = '../../Data/fall/';
 config.pathToTraffic = '../../Data/traffic/';
 
-config.maxIterations = 10; %20
+config.maxIterations = 3; %20
 config.minfDiff = 0.01;
-config.alpha = 0.1:0.1:7;
+config.alpha = 1:0.1:7;
 config.rho = 0:0.05:1;
-config.grayscale = false;
+config.grayscale = true;
 config.yuv = true;
+config.nonAdaptative = false;
 config.adaptative = true;
-config.nonAdaptative = true;
-config.gmm = true;
+config.gmm = false;
 
 % Optional 6 GMM
-config.learningRate = 0.001:0.05:1;
-config.numGaussians = 2:7;
+config.learningRate = 0.001:0.002:0.05;
+config.numGaussians = 2:6;
+config.minBackgroundRate = 0.05:0.05:0.95;
 
 highwayFrames = [1050 1350];
 fallFrames =    [1460 1560];

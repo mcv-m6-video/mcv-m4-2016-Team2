@@ -1,4 +1,4 @@
-function [ sequenceEvaluation ] = EvaluateRho( sequence, alpha, adaptative, rho)
+function [sequenceEvaluation ] = EvaluateRho( sequence, alpha, adaptative, rho)
 %EVALUATEROH Summary of this function goes here
 %   Detailed explanation goes here
 
