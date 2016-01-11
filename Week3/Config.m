@@ -11,6 +11,14 @@ config.minfDiff = 0.01;
 config.alpha = 1:0.1:7;
 config.rho = 0:0.05:1;
 
+
+
+config.nonAdaptive = true;
+config.adaptive = true;
+config.grayscale = true;
+
+config.morphologicalFiltering = 'areaFilt';%'imfill'; %'areaFilt' % 'other'
+config.areaFilteringSize = 3;
 config.connectivity = 4; %8
 
 highwayFrames = [1050 1350];
