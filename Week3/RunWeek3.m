@@ -1,4 +1,4 @@
-%load('resultsWeek2.mat')
+%load('resultsWeek3.mat')
 cfg = Config();
 
 [highway, fall, traffic] = LoadDatabases(cfg);
@@ -33,5 +33,10 @@ if cfg.grayscale
     
 else
     
-    
+% Task 6: Improved Evaluation of Foreground Maps
+% FG - Binary / Non binary foreground map (double values in the range [0 1])
+% FG = ;
+% GT - Logical binary ground truth
+% GT = ;
+% [R, P, Q] = FWeightedMeasure(FG, GT);  
 end
