@@ -1,5 +1,7 @@
 function outMask = ImproveMask(mask, cfg)
 
+outMask = mask;
+
 if strcmp(cfg.morphologicalFiltering, 'imfill')
     outMask = MorphologicalFillingHoles(mask, cfg);
     

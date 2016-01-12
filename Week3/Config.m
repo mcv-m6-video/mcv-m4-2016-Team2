@@ -11,13 +11,15 @@ config.minfDiff = 0.01;
 config.alpha = 1:0.1:7;
 config.rho = 0:0.05:1;
 
-
+config.highway.bestRho = 0.15;
+config.fall.bestRho = 0.20;
+config.traffic.bestRho = 0.25;
 
 config.nonAdaptive = true;
 config.adaptive = true;
 config.grayscale = true;
 
-config.morphologicalFiltering = 'areaFilt';%'imfill'; %'areaFilt' % 'other'
+config.morphologicalFiltering = 'imfill';%'base';%'areaFilt'; %'areaFilt' % 'other'
 config.areaFilteringSize = 3;
 config.connectivity = 4; %8
 

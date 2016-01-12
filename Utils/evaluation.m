@@ -46,15 +46,13 @@ FPtotal_val = sum(FPtotal);
 TNtotal_val = sum(TNtotal);
 
 precisionTotal = TPtotal_val /(TPtotal_val + FPtotal_val);
-recalllTotal = TPtotal_val /(TPtotal_val + FNtotal_val);
-% AUCTotal = trapz(recalllTotal,precisionTotal);
-Ftotal =( 2*precisionTotal*recalllTotal )/(precisionTotal+recalllTotal);
+recallTotal = TPtotal_val /(TPtotal_val + FNtotal_val);
+Ftotal =( 2*precisionTotal*recallTotal )/(precisionTotal+recallTotal);
 
 evaluationSequence.TP = TPtotal_val;
 evaluationSequence.FN = FNtotal_val;
 evaluationSequence.FP = FPtotal_val;
 evaluationSequence.TN = TNtotal_val;
 evaluationSequence.precision = precisionTotal;
-evaluationSequence.recall = recalllTotal;
+evaluationSequence.recall = recallTotal;
 evaluationSequence.F = Ftotal;
-% evaluationSequence.AUC = AUCTotal;

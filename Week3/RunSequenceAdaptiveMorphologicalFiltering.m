@@ -1,17 +1,28 @@
-function [sequence] = RunSequenceAdaptiveMorphologicalFiltering(sequence, cfg)
+function [sequence] = RunSequenceAdaptiveMorphologicalFiltering(sequence, cfg, bestRho)
 
-[bestRho, bestAlpha, sequence] = optimization(sequence);
+%  we already have the best rho
+% [bestRho, bestAlpha, sequence] = optimization(sequence);
 
-[ ~, bestResult ] = EvaluateAlphaFiltering(sequence, bestAlpha, true, bestRho, cfg);
+[ alphaEval, bestResult ] = EvaluateAlphaFiltering(sequence, cfg.alpha, true, bestRho, cfg);
+
+recall = extractfield(cell2mat(alphaEval), 'recall');    
+precision = extractfield(cell2mat(alphaEval), 'precision');    
+AUC = abs(trapz(recall, precision));
 
 if strcmp(cfg.morphologicalFiltering, 'imfill')
     sequence.adaptiveImfill.bestResult = bestResult;
+    sequence.adaptiveImfill.AUC = AUC;
     
 elseif strcmp(cfg.morphologicalFiltering, 'areaFilt')
     sequence.adaptiveFiltering.bestResult = bestResult;
+    sequence.adaptiveFiltering.AUC = AUC;
     
 elseif strcmp(cfg.morphologicalFiltering, 'other')
     sequence.adaptiveTask5.bestResult = bestResult;
+    sequence.adaptiveTask5.AUC = AUC;
+else
+    sequence.adaptiveBase.bestResult = bestResult;
+    sequence.adaptiveBase.AUC = AUC;
 end
 
     function [bestRho, bestAlpha, sequence] = optimization(sequence)
@@ -52,23 +63,29 @@ end
             iterations = iterations+1
             fDiff = abs(oldBestF - bestF);
         end
-        
-        
-        
+
         if strcmp(cfg.morphologicalFiltering, 'imfill')
             sequence.adaptiveImfill.bestAlpha = bestAlpha;
+            sequence.adaptiveImfill.bestRho = bestRho;
             sequence.adaptiveImfill.bestF = bestF;
             sequence.adaptiveImfill.alphaEvaluation = alphaEvaluation;
             
         elseif strcmp(cfg.morphologicalFiltering, 'areaFilt')
             sequence.adaptiveFiltering.bestAlpha = bestAlpha;
+            sequence.adaptiveFiltering.bestRho = bestRho;
             sequence.adaptiveFiltering.bestF = bestF;
             sequence.adaptiveFiltering.alphaEvaluation = alphaEvaluation;
             
         elseif strcmp(cfg.morphologicalFiltering, 'other')
             sequence.adaptiveTask5.bestAlpha = bestAlpha;
+            sequence.adaptiveTask5.bestRho = bestRho;
             sequence.adaptiveTask5.bestF = bestF;
             sequence.adaptiveTask5.alphaEvaluation = alphaEvaluation;
+        else
+            sequence.adaptiveBase.bestAlpha = bestAlpha;
+            sequence.adaptiveBase.bestRho = bestRho;
+            sequence.adaptiveBase.bestF = bestF;
+            sequence.adaptiveBase.alphaEvaluation = alphaEvaluation;
         end
     end
 end

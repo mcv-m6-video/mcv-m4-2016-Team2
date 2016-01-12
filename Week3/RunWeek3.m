@@ -24,11 +24,11 @@ if cfg.grayscale
     if cfg.adaptive
         display('........Adaptative............')
         display('...............Highway sequence............')
-        [highway] = RunSequenceAdaptiveMorphologicalFiltering(highway, cfg);
+        [highway] = RunSequenceAdaptiveMorphologicalFiltering(highway, cfg, cfg.highway.bestRho);
         display('...............Fall sequence................')
-        [fall] = RunSequenceAdaptiveMorphologicalFiltering(fall, cfg);
+        [fall] = RunSequenceAdaptiveMorphologicalFiltering(fall, cfg, cfg.fall.bestRho);
         display('...............Traffic sequence..............')
-        [traffic] = RunSequenceAdaptiveMorphologicalFiltering(traffic, cfg);
+        [traffic] = RunSequenceAdaptiveMorphologicalFiltering(traffic, cfg, cfg.traffic.bestRho);
     end
     
 else
