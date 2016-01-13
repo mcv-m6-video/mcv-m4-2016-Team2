@@ -45,37 +45,37 @@ if cfg.grayscale
     traffic.seqName = TseqName;
     traffic.numTrainingFrames = TnumTrainingFrames;
     traffic.pathVideo = TpathVideo ;
-
-elseif cfg.yuv
-    [highway{1}.train, highway{2}.train, highway{3}.train] = obtainYUV(HWtrain);
-    [highway{1}.test, highway{2}.test, highway{3}.test] = obtainYUV(HWtest);
-    highway{1}.gt = HWgt; highway{2}.gt = HWgt; highway{3}.gt = HWgt;
-    highway{1}.seqName = HWseqName; highway{2}.seqName = HWseqName; highway{3}.seqName = HWseqName;
-    
-    [fall{1}.train, fall{2}.train, fall{3}.train] = obtainYUV(Ftrain);
-    [fall{1}.test, fall{2}.test, fall{3}.test] = obtainYUV(Ftest);
-    fall{1}.gt = Fgt; fall{2}.gt = Fgt; fall{3}.gt = Fgt;
-    fall{1}.seqName = FseqName; fall{2}.seqName = FseqName; fall{3}.seqName = FseqName;
-    
-    
-    [traffic{1}.train, traffic{2}.train, traffic{3}.train] = obtainYUV(Ttrain);
-    [traffic{1}.test, traffic{2}.test, traffic{3}.test] = obtainYUV(Ttest);
-    traffic{1}.gt = Tgt; traffic{2}.gt = Tgt; traffic{3}.gt = Tgt;
-    traffic{1}.seqName = TseqName; traffic{2}.seqName = TseqName; traffic{3}.seqName = TseqName;
-
 end
 
-end
-function [Y, U, V] = obtainYUV (sequence)
+% if cfg.hsv
+%     [highway{1}.train, highway{2}.train, highway{3}.train] = obtainHSV(HWtrain);
+%     [highway{1}.test, highway{2}.test, highway{3}.test] = obtainHSV(HWtest);
+%     highway{1}.gt = HWgt; highway{2}.gt = HWgt; highway{3}.gt = HWgt;
+%     highway{1}.seqName = HWseqName; highway{2}.seqName = HWseqName; highway{3}.seqName = HWseqName;
+%     
+%     [fall{1}.train, fall{2}.train, fall{3}.train] = obtainHSV(Ftrain);
+%     [fall{1}.test, fall{2}.test, fall{3}.test] = obtainHSV(Ftest);
+%     fall{1}.gt = Fgt; fall{2}.gt = Fgt; fall{3}.gt = Fgt;
+%     fall{1}.seqName = FseqName; fall{2}.seqName = FseqName; fall{3}.seqName = FseqName;
+%     
+%     
+%     [traffic{1}.train, traffic{2}.train, traffic{3}.train] = obtainHSV(Ttrain);
+%     [traffic{1}.test, traffic{2}.test, traffic{3}.test] = obtainHSV(Ttest);
+%     traffic{1}.gt = Tgt; traffic{2}.gt = Tgt; traffic{3}.gt = Tgt;
+%     traffic{1}.seqName = TseqName; traffic{2}.seqName = TseqName; traffic{3}.seqName = TseqName;
+% 
+% end
 
-    colorTrain = cellfun(@(c) double(rgb2ycbcr(c)), sequence, 'UniformOutput', false);
-    %y
-    Y = cellfun(@(c) c(:,:,1), colorTrain, 'UniformOutput', false);
-    %u
+if cfg.removeShadow
+    highway.hsv.train = cellfun(@(c) double(rgb2hsv(c)), HWtrain, 'UniformOutput', false);
+    highway.hsv.test = cellfun(@(c) double(rgb2hsv(c)), HWtest, 'UniformOutput', false);
     
-    U = cellfun(@(c) c(:,:,2), colorTrain, 'UniformOutput', false);
-    %v
-    V = cellfun(@(c) c(:,:,3), colorTrain, 'UniformOutput', false);
-%     UV = cellfun(@(c) mean(c(:,:,2:3), 3), colorTrain, 'UniformOutput', false);
-%     a = 1;
+    fall.hsv.train = cellfun(@(c) double(rgb2hsv(c)), Ftrain, 'UniformOutput', false);
+    fall.hsv.test = cellfun(@(c) double(rgb2hsv(c)), Ftest, 'UniformOutput', false);
+    
+    traffic.hsv.train = cellfun(@(c) double(rgb2hsv(c)), Ttrain, 'UniformOutput', false);
+    traffic.hsv.test = cellfun(@(c) double(rgb2hsv(c)), Ttest, 'UniformOutput', false);
+end
+
+
 end

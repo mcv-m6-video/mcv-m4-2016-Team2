@@ -15,13 +15,14 @@ config.highway.bestRho = 0.15;
 config.fall.bestRho = 0.20;
 config.traffic.bestRho = 0.25;
 
-config.nonAdaptive = true;
-config.adaptive = true;
+config.nonAdaptative = true;
 config.grayscale = true;
 
 config.morphologicalFiltering = 'imfill';%'base';%'areaFilt'; %'areaFilt' % 'other'
 config.areaFilteringSize = 3;
 config.connectivity = 4; %8
+
+config.removeShadow = true;
 
 highwayFrames = [1050 1350];
 fallFrames =    [1460 1560];

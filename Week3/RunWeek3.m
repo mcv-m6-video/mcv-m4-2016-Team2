@@ -9,19 +9,25 @@ if cfg.grayscale
     fall.gaussian = GaussianPerPixel( fall.train, cfg );
     traffic.gaussian = GaussianPerPixel( traffic.train, cfg );
     
-    if cfg.nonAdaptive
+    if cfg.nonAdaptative
         display('........Non adaptative............')
         display('...............Highway sequence............')
         [highway] = RunSequenceNonAdaptiveMorphologicalFiltering(highway, cfg);
+        display('...............Removing shadows in Highway sequence............')
+        [highway] = RemoveShadows(highway, cfg);
         %showSequence(highway)
         display('...............Fall sequence................')
         [fall] = RunSequenceNonAdaptiveMorphologicalFiltering(fall, cfg);
+        display('...............Removing shadows in Fall sequence............')
+        [fall] = RemoveShadows(fall, cfg);
         display('...............Traffic sequence..............')
         [traffic] = RunSequenceNonAdaptiveMorphologicalFiltering(traffic, cfg);
+        display('...............Removing shadows in Traffic sequence............')
+        [traffic] = RemoveShadows(traffic, cfg);
         
     end
     
-    if cfg.adaptive
+    if  ~cfg.nonAdaptative
         display('........Adaptative............')
         display('...............Highway sequence............')
         [highway] = RunSequenceAdaptiveMorphologicalFiltering(highway, cfg, cfg.highway.bestRho);
