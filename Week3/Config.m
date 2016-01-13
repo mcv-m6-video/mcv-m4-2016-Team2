@@ -18,7 +18,7 @@ config.traffic.bestRho = 0.25;
 config.nonAdaptative = true;
 config.grayscale = true;
 
-config.morphologicalFiltering = 'imfill';%'base';%'areaFilt'; %'areaFilt' % 'other'
+config.morphologicalFiltering = 'base';%'base';%'areaFilt'; %'areaFilt' % 'other'
 config.areaFilteringSize = 3;
 config.connectivity = 4; %8
 

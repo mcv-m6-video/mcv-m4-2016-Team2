@@ -1,7 +1,15 @@
 function [ sequence ] = RemoveShadows( sequence, cfg )
 
 %inputImages need to be in HSV
-masks = sequence.nonAdaptiveImfill.bestResult;
+if strcmp(cfg.morphologicalFiltering, 'imfill')
+    masks = sequence.nonAdaptiveImfill.bestResult;
+    
+elseif strcmp(cfg.morphologicalFiltering, 'areaFilt')
+    masks = sequence.nonAdaptiveFiltering.bestResult;
+    
+else
+    masks = sequence.nonAdaptiveBase.bestResult;
+end
 images = sequence.hsv.test;
 
 [Htrain, Strain, Vtrain] = obtainHSV(sequence.hsv.train);
@@ -10,18 +18,33 @@ Hgaussian = GaussianPerPixel( Htrain, cfg );
 Sgaussian = GaussianPerPixel( Strain, cfg ); 
 Vgaussian = GaussianPerPixel( Vtrain, cfg ); 
 
-alphaV = 0.4;
-betaV = 0.6;
-thresS = 0.1;
-thresH = 0.5;
+alphaV = 0.05;
+betaV = 0.2;
+thresS = 0.2;
+thresH = 0.6;
 
 for index = 1:length(images)
-    mask = zeros(size(masks{index}));
-    mask(masks{index} ==255) = 1; 
+    mask = masks{index} == 255;
+    
     result{index} = masks{index};
     I = images{index};
     
-    result{index}(logical((alphaV< (I(:,:,3)./Vgaussian.mean) <= betaV & (I(:,:,2) - Sgaussian.mean) <= thresS & abs(I(:,:,1) - Hgaussian.mean) <= thresH).*mask)) = 0; 
+    Vdivision = I(:,:,3)./Vgaussian.mean;
+    
+    maskV = alphaV< Vdivision & Vdivision<= betaV;
+    
+    maskS = (I(:,:,2) - Sgaussian.mean) <= thresS;
+    
+    maskH = abs(I(:,:,1) - Hgaussian.mean) <= thresH;
+    
+    result{index}(maskV & maskS & maskH & mask) = 0; 
+    
+    
+%     subplot(2,2,1), title('maskV'), imshow(maskV & mask)
+%     subplot(2,2,2), title('maskS'), imshow(maskS & mask),
+%     subplot(2,2,3), title('maskH'), imshow(maskH & mask),
+%     subplot(2,2,4), title('result'), imshow(maskV & maskS & maskH & mask);
+%     pause();
 end
 
 

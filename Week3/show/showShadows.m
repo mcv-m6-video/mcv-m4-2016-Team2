@@ -1,8 +1,16 @@
 % Cambiar 
-sequence = traffic;
+sequence = highway;
 % FIN cambiar
 
-masks = sequence.nonAdaptiveImfill.bestResult;
+if strcmp(cfg.morphologicalFiltering, 'imfill')
+    masks = sequence.nonAdaptiveImfill.bestResult;
+    
+elseif strcmp(cfg.morphologicalFiltering, 'areaFilt')
+    masks = sequence.nonAdaptiveFiltering.bestResult;
+    
+else
+    masks = sequence.nonAdaptiveBase.bestResult;
+end
 
 masksNoShadows  = sequence.noShadows.results;
 
