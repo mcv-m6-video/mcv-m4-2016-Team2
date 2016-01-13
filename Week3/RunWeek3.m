@@ -12,31 +12,21 @@ if cfg.grayscale
     if cfg.nonAdaptative
         display('........Non adaptative............')
         display('...............Highway sequence............')
-        [highway] = RunSequenceNonAdaptiveMorphologicalFiltering(highway, cfg);
+        [highway] = RunSequenceAdaptiveMorphologicalFiltering(highway, cfg, cfg.highway.bestRho);
         display('...............Removing shadows in Highway sequence............')
-        [highway] = RemoveShadows(highway, cfg);
+%         [highway] = RemoveShadows(highway, cfg);
         %showSequence(highway)
         display('...............Fall sequence................')
-        [fall] = RunSequenceNonAdaptiveMorphologicalFiltering(fall, cfg);
-        display('...............Removing shadows in Fall sequence............')
-        [fall] = RemoveShadows(fall, cfg);
-        display('...............Traffic sequence..............')
-        [traffic] = RunSequenceNonAdaptiveMorphologicalFiltering(traffic, cfg);
-        display('...............Removing shadows in Traffic sequence............')
-        [traffic] = RemoveShadows(traffic, cfg);
-        
-    end
-    
-    if  ~cfg.nonAdaptative
-        display('........Adaptative............')
-        display('...............Highway sequence............')
-        [highway] = RunSequenceAdaptiveMorphologicalFiltering(highway, cfg, cfg.highway.bestRho);
-        display('...............Fall sequence................')
         [fall] = RunSequenceAdaptiveMorphologicalFiltering(fall, cfg, cfg.fall.bestRho);
+        display('...............Removing shadows in Fall sequence............')
+%         [fall] = RemoveShadows(fall, cfg);
         display('...............Traffic sequence..............')
         [traffic] = RunSequenceAdaptiveMorphologicalFiltering(traffic, cfg, cfg.traffic.bestRho);
+        display('...............Removing shadows in Traffic sequence............')
+%         [traffic] = RemoveShadows(traffic, cfg);
+        
     end
-    
+        
 else
     
 % Task 6: Improved Evaluation of Foreground Maps

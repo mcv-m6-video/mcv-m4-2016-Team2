@@ -26,7 +26,7 @@ if strcmp(cfg.morphologicalFiltering, 'imfill')
     sequence.adaptiveImfill.bestRho     = bestRho;
     sequence.adaptiveImfill.recall     = recall;
     sequence.adaptiveImfill.precision     = precision;
-    
+    sequence.adaptiveImfill.alphaEvaluation = alphaEval;
 elseif strcmp(cfg.morphologicalFiltering, 'areaFilt')
     sequence.adaptiveFiltering.bestResult = bestResult;
     sequence.adaptiveFiltering.AUC = AUC;
@@ -36,6 +36,7 @@ elseif strcmp(cfg.morphologicalFiltering, 'areaFilt')
     
     sequence.adaptiveFiltering.recall     = recall;
     sequence.adaptiveFiltering.precision     = precision;
+    sequence.adaptiveFiltering.alphaEvaluation = alphaEval;
 elseif strcmp(cfg.morphologicalFiltering, 'other')
     sequence.adaptiveTask4.bestResult   = bestResult;
     sequence.adaptiveTask4.AUC          = AUC;
@@ -45,6 +46,7 @@ elseif strcmp(cfg.morphologicalFiltering, 'other')
     
     sequence.adaptiveTask4.recall     = recall;
     sequence.adaptiveTask4.precision     = precision;
+    sequence.adaptiveTask4.alphaEvaluation = alphaEval;
     
 else
     sequence.adaptiveBase.bestResult = bestResult;
@@ -52,6 +54,9 @@ else
     sequence.adaptiveBase.bestAlpha    = bestAlpha;
     sequence.adaptiveBase.F            = bestF;
     sequence.adaptiveBase.bestRho      = bestRho;
+    sequence.adaptiveBase.recall     = recall;
+    sequence.adaptiveBase.precision     = precision;
+    sequence.adaptiveBase.alphaEvaluation = alphaEval;
 end
 
         
