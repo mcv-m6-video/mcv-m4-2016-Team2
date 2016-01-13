@@ -9,7 +9,7 @@ if cfg.grayscale
     fall.gaussian = GaussianPerPixel( fall.train, cfg );
     traffic.gaussian = GaussianPerPixel( traffic.train, cfg );
     
-    if cfg.nonAdaptative
+    
         display('........Non adaptative............')
         display('...............Highway sequence............')
         [highway] = RunSequenceAdaptiveMorphologicalFiltering(highway, cfg, cfg.highway.bestRho);
@@ -25,9 +25,9 @@ if cfg.grayscale
         display('...............Removing shadows in Traffic sequence............')
 %         [traffic] = RemoveShadows(traffic, cfg);
         
-    end
+
         
-else
+
     
 % Task 6: Improved Evaluation of Foreground Maps
 % FG - Binary / Non binary foreground map (double values in the range [0 1])
