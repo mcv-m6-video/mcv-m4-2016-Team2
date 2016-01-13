@@ -22,6 +22,9 @@ for rhoIndex = 1:length(rho)
     
     % save the evaluation in the corresponding index of iteration
     [ ~ , sequenceEvaluation{rhoIndex} ] = evaluation(result, sequence.gt); 
+    mean = sequence.gaussian.mean;
+    stdDev = sequence.gaussian.stdDev;
+    variance = sequence.gaussian.variance;
 end
 
 end

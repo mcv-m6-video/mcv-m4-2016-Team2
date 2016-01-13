@@ -31,19 +31,21 @@ function [sequence] = RunSequenceAdaptive(sequence, cfg)
             [F,I] = sort(FValues, 'descend');
             bestRho = cfg.rho(I(1))
             bestF = F(1)
-            % compute alpha with best rho
-            antes = sequence.gaussian.mean;
-            [alphaEvaluation] = EvaluateAlpha(sequence, cfg.alpha, true, bestRho);
-            despues = sequence.gaussian.mean;
-            isequal(antes, despues)
-            FValues = extractfield(cell2mat(alphaEvaluation), 'F');    
-            FValues = FValues(~isnan(FValues));
-            [F,I] = sort(FValues, 'descend');
-            bestAlpha = cfg.alpha(I(1))
-            bestF = F(1)
+            
+             
+                % compute alpha with best rho
+                antes = sequence.gaussian.mean;
+                [alphaEvaluation] = EvaluateAlpha(sequence, cfg.alpha, true, bestRho);
+                despues = sequence.gaussian.mean;
+                isequal(antes, despues)
+                FValues = extractfield(cell2mat(alphaEvaluation), 'F');    
+                FValues = FValues(~isnan(FValues));
+                [F,I] = sort(FValues, 'descend');
+                bestAlpha = cfg.alpha(I(1))
+                bestF = F(1)
+            fDiff = abs(oldBestF - bestF);
 
             iterations = iterations+1
-            fDiff = abs(oldBestF - bestF);
         end
 
         sequence.adaptive.bestAlpha   = bestAlpha;
