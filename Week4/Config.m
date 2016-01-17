@@ -2,13 +2,11 @@ function [ config ] = Config()
 %CONFIG Summary of this function goes here
 %   Detailed explanation goes here
 
-config.pathToKitti = '';
+config.pathToKitti = '../../Data/OpticalFlow/';
 config.pathToTraffic = '../../Data/traffic/';
 
-
-highwayFrames = [1050 1350];
-fallFrames =    [1460 1560];
 trafficFrames = [950  1050];
+config.kittiSequences = [000045 000157];
 
 trainTestSplit = 0.5;
 
@@ -18,9 +16,13 @@ config.traffic.trainFrames =    trafficFrames(1)   :   trafficMiddlePoint;
 config.traffic.testFrames =    trafficMiddlePoint+1   :   trafficFrames(2);
 
 config.traffic.inputPath =  [ config.pathToTraffic 'input/' ];
-
 config.traffic.gtPath =  [ config.pathToTraffic 'groundtruth/' ];
 
+config.kitti.inputPath = [ config.pathToKitti 'input/' ];
+config.kitti.gtPath = [ config.pathToKitti 'groundtruth/' ];
+
+
+config.blockSize = 16;
 
 %%
 % Plotly

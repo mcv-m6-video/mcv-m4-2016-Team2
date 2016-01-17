@@ -1,29 +1,37 @@
-% function BlockMatching()
+function [image] = BlockMatching(image,cfg)
 % Backward
 % block size = 16x16
-% area search = 32x32
+% area search = 32x32 (2n+1)*(2n+1)
 
-blockSize = 16;
-reference = Ttest{1};
-current = Ttest{2};
-
+current = image.current;
+reference = image.reference;
+blockSize = cfg.blockSize;
 [rows, cols] = size(current);
-numBlocksPerRow = rows/blockSize;
-numBlocksPerCol = cols/blockSize;
-vmX = zeros(rows, cols);
-vmY = zeros(rows, cols);
+%numBlocksPerRow = rows/blockSize;
+%numBlocksPerCol = cols/blockSize;
+vmR = zeros(rows, cols);
+vmC = zeros(rows, cols);
 
-for rr = 0:numBlocksPerRow-1
-    for cc = 0:numBlocksPerCol-1
+for rr = 1: blockSize: rows-blockSize+1
+    for cc = 1: blockSize: cols-blockSize+1
         % Get block
-        currentBlock = current((rr*blockSize)+1:(rr+1)*blockSize,...
-                                (cc*blockSize)+1:(cc+1)*blockSize);
+        point.pointR1 = rr;
+        point.pointR2 = rr + blockSize -1;
+        point.pointC1 = cc;
+        point.pointC2 = cc + blockSize -1;
+        
+        currentBlock = current(point.pointR1:point.pointR2,...
+                                point.pointC1:point.pointC2);
         % Search area
-        [vmXBlock, vmYBlock] = searchAlgorithm(reference, currentBlock);
-        vmX((rr*blockSize)+1:(rr+1)*blockSize,...
-            (cc*blockSize)+1:(cc+1)*blockSize) = vmXBlock;
-        vmY((rr*blockSize)+1:(rr+1)*blockSize,...
-            (cc*blockSize)+1:(cc+1)*blockSize) = vmXBlock;
+        [vmRBlock, vmCBlock] = SearchAlgorithm(reference, currentBlock, point, cfg);
+        vmR(point.pointR1:point.pointR2,...
+            point.pointC1:point.pointC2) = vmRBlock;
+        vmC(point.pointR1:point.pointR2,...
+            point.pointC1:point.pointC2) = vmCBlock;
    
     end
+end
+
+image.vmR = vmR;
+image.vmC = vmC;
 end
