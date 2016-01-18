@@ -28,7 +28,7 @@ for rr = -bSize:bSize
         end
         
         referenceBlock = reference(refBlockR1: refBlockR2, refBlockC1: refBlockC2);
-        mad = MAD(referenceBlock, currentBlock);
+        mad = immse(referenceBlock, currentBlock);
         
         if mad <=  minMad
            minMad = mad;
