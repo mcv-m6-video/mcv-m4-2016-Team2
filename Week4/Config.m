@@ -22,7 +22,7 @@ config.kitti.inputPath = [ config.pathToKitti 'input/' ];
 config.kitti.gtPath = [ config.pathToKitti 'groundtruth/' ];
 
 
-config.blockSize = 16;
+config.blockSize = 4;
 
 %%
 % Plotly
