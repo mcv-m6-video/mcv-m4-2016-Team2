@@ -1,4 +1,4 @@
-function [image] = BlockMatching(image,cfg)
+function [flowBM] = BlockMatching(image,cfg)
 % Backward
 % block size = 16x16
 % area search = 32x32 (2n+1)*(2n+1)
@@ -32,6 +32,8 @@ for rr = 1: blockSize: rows-blockSize+1
     end
 end
 
-image.vmR = vmR;
-image.vmC = vmC;
+% image.vmR = vmR;
+% image.vmC = vmC;
+flowBM.Vx = vmC;
+flowBM.Vy = vmR;
 end

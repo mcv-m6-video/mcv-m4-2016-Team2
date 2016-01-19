@@ -6,7 +6,7 @@ function [vmR, vmC]=SearchAlgorithm(reference, currentBlock, point, cfg)
 % posX y pos Y son dirctamente el desplazaminto de cada bloque
 [blockRows, blockCols] = size(currentBlock);
 [rows, cols] = size(reference);
-
+% p = cfg.p;
 r1 = point.pointR1;
 c1 = point.pointC1;
 

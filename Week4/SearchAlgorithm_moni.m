@@ -1,6 +1,6 @@
 function [vmY, vmX]=SearchAlgorithm_moni(reference, currentBlock, point, cfg)
 % Design parameters
-p=5;
+p=7;
 blockSize = cfg.blockSize;
 
 L = floor(log10(p+1)/log10(2));
@@ -10,7 +10,7 @@ y = point.pointR1;
 x = point.pointC1;
 xRef = x;
 yRef = y;
-[sx, sy] = size(reference);
+[sy, sx] = size(reference);
 
 % cost matrix contains MSE value for the 9 points. [3, 3]
 costMatrix = Inf*ones(3, 3);
@@ -63,6 +63,6 @@ while stepSize >= 1
     costMatrix(2, 2) = minVal;
 end
 
-vmX = x - xRef;
-vmY = y - yRef;
+vmX = xRef - x;
+vmY = yRef - y;
 
