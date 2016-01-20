@@ -23,7 +23,8 @@ config.kitti.gtPath = [ config.pathToKitti 'groundtruth/' ];
 
 
 config.blockSize = 4;
-
+config.p = config.blockSize;
+config.methodBM = 'exhaustive'; % '3steps'
 %%
 % Plotly
 addpath(genpath('../MATLAB-api-master'))

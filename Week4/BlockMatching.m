@@ -23,7 +23,11 @@ for rr = 1: blockSize: rows-blockSize+1
         currentBlock = current(point.pointR1:point.pointR2,...
                                 point.pointC1:point.pointC2);
         % Search area
-        [vmRBlock, vmCBlock] = SearchAlgorithm_moni(reference, currentBlock, point, cfg);
+        if strcmp(cfg.methodBM, 'exhaustive')
+            [vmRBlock, vmCBlock] = SearchAlgorithm(reference, currentBlock, point, cfg);
+        else
+            [vmRBlock, vmCBlock] = SearchAlgorithm3steps(reference, currentBlock, point, cfg);
+        end
         vmR(point.pointR1:point.pointR2,...
             point.pointC1:point.pointC2) = vmRBlock;
         vmC(point.pointR1:point.pointR2,...

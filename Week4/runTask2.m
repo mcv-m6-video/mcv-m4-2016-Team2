@@ -1,45 +1,53 @@
+% TASK 2: Comparison with Lucas-Kanade
 cfg = Config();
 
 [kitti] = LoadKitti(cfg);
-
-for i = 1:1%length(kitti)
+cfg.p = 16;
+%% BLOCK MATCHING
+for i = 1:length(kitti)
     display(['Sequence: ' num2str(i)])
-    [kitti{i}.flowBM] = BlockMatching(kitti{i},cfg);
+    kitti{i}.B = cfg.blockSize;
+    kitti{i}.methodBM = cfg.methodBM;
+    tstart = tic;
+    kitti{i}.flowBM = BlockMatching(kitti{i},cfg);
+    kitti{i}.telapsedBM = toc(tstart);
+    kitti{i}.compensatedImageBM = BackwardMotionCompensation(kitti{i}.reference, kitti{i}.flowBM);
+    kitti{i}.pepnBM = pepn(kitti{i}.compensatedImageBM, kitti{i}.current);
+    kitti{i}.mmseBM = immse(kitti{i}.compensatedImageBM, im2double(kitti{i}.current));
 end
-%% 
-% flowBM.Vx = kitti{1}.vmC;
-% flowBM.Vy = kitti{1}.vmR;
-%%
-reference = kitti{1}.reference;
 
-compensatedImageBM = BackwardMotionCompensation(kitti{1}.reference, kitti{1}.flowBM);
-
-pepnBM = pepn(compensatedImageBM, kitti{1}.current);
-mmseBM = immse(compensatedImageBM, im2double(kitti{1}.current));
-
-figure;
-subplot(4, 1, 1); imshow(kitti{1}.reference);
-subplot(4, 1, 2); imshow(kitti{1}.current);
-subplot(4, 1, 3); imshow(compensatedImageBM/255);
-subplot(4, 1, 4); imshowpair(compensatedImageBM, kitti{1}.current)
-
-%%
+%% LUCAS-KANADE
 opticalFlow = opticalFlowLK('NoiseThreshold', 0.03);
-sequence = kitti{1}.reference;
-sequence(:,:,end+1) = kitti{1}.current;
-for ii=1:size(sequence, 3)
-    frame = sequence(:,:,ii);
-    flowLK = estimateFlow(opticalFlow, frame); 
+for ii_seq = 1:length(kitti)
+    sequence = kitti{ii_seq}.reference;
+    sequence(:,:, end+1) = kitti{ii_seq}.current;
+    for i = 1:size(sequence, 3)
+        frame = sequence(:,:,i);
+        tstart = tic;
+        flowLK = estimateFlow(opticalFlow, frame);
+        kitti{i}.telapsedLK = toc(tstart);
+    end
+    kitti{ii_seq}.flowLK = flowLK;
+    kitti{ii_seq}.compensatedImageLK = ForwardMotionCompensation(kitti{ii_seq}.reference, kitti{ii_seq}.flowLK);
+    kitti{ii_seq}.pepnLK = pepn(kitti{ii_seq}.compensatedImageLK, kitti{ii_seq}.current);
+    kitti{ii_seq}.mmseLK = immse(kitti{ii_seq}.compensatedImageLK, im2double(kitti{ii_seq}.current));
+    opticalFlow.reset();
+    
 end
 
-compensatedImageLK = ForwardMotionCompensation(kitti{1}.reference, flowLK);
 
-pepnLK = pepn(compensatedImageLK, kitti{1}.current);
-mmseLK = immse(compensatedImageLK, im2double(kitti{1}.current));
 
-figure;
-subplot(4, 1, 1); imshow(kitti{1}.reference);
-subplot(4, 1, 2); imshow(kitti{1}.current);
-subplot(4, 1, 3); imshow(compensatedImageLK/255);
-subplot(4, 1, 4); imshowpair(compensatedImageLK, kitti{1}.current)
+%% Evaluation 
 
+% figure;
+% subplot(4, 1, 1); imshow(kitti{1}.reference);
+% subplot(4, 1, 2); imshow(kitti{1}.current);
+% subplot(4, 1, 3); imshow(compensatedImageBM/255);
+% subplot(4, 1, 4); imshowpair(compensatedImageBM, kitti{1}.current)
+%
+% figure;
+% subplot(4, 1, 1); imshow(kitti{1}.reference);
+% subplot(4, 1, 2); imshow(kitti{1}.current);
+% subplot(4, 1, 3); imshow(compensatedImageLK/255);
+% subplot(4, 1, 4); imshowpair(compensatedImageLK, kitti{1}.current)
+% 

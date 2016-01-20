@@ -1,16 +1,12 @@
 function [vmR, vmC]=SearchAlgorithm(reference, currentBlock, point, cfg)
 
-%Dos matrices una con lo q se ha movido X i la otra con lo q se ha
-%movido Y 
-%http://www.vlsi.uwindsor.ca/presentations/2007/4-2Dimensional%20Motion%20Estimation.pdf
-% posX y pos Y son dirctamente el desplazaminto de cada bloque
 [blockRows, blockCols] = size(currentBlock);
 [rows, cols] = size(reference);
 % p = cfg.p;
 r1 = point.pointR1;
 c1 = point.pointC1;
 
-bSize = cfg.blockSize;
+bSize = cfg.p;
 minMad = 65537;
 
 vmR = 0;
