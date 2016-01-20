@@ -1,25 +1,32 @@
-function [ MSEResults, PEPNResults] = MSEImages(testImages, groundTruth)
+function [ MSEResults, PEPNResults] = MSEImages(flow, groundTruth)
 
 
-    for index = 1:length(testImages)
-        testI = testImages{index};
-        gtI = groundTruth{index};
+        %testI = testImages{index};
+        gtI = groundTruth;
         
-        testIxy = (double(testI(:,:,1:2)) - 2^15) ./ 64;
-        gtIxy = (double(gtI(:,:,1:2)) - 2^15) ./ 64;
-
-        testIx = testIxy(:,:,1);
-        testIy = testIxy(:,:,2);
-
-        gtIx = gtIxy(:,:,1);
-        gtIy = gtIxy(:,:,2);
-
-        magnitude = sqrt( (testIx-gtIx).^2 + (testIy-gtIy).^2 );
         
-        mask = gtI(:,:,3) > 0;
-        validMagnitudes = magnitude(mask);
-            
-        MSEResults(index) = sum(validMagnitudes .^ 2) / length(validMagnitudes);
-        PEPNResults(index) = sum(sum(validMagnitudes > 3)) / sum(sum(mask)) * 100;
-    end
+        gtIx = (double(gtI(:,:,1)) - 2^15)/ 64;
+        gtIy = (double(gtI(:,:,2)) - 2^15)/ 64;
+        
+        %For Lucas Kanade:
+%         testIxy = (double(flow(:,:,1:2)) - 2^15) ./ 64;
+%         testIx = testIxy(:,:,1);
+%         testIy = testIxy(:,:,2);
+
+        %For our results:
+        testIx = flow.Vx;
+        testIy = flow.Vy;
+        
+        gtValid = min(gtI(:,:,3),1);
+        gtIx(gtValid==0) = 0;
+        gtIy(gtValid==0) = 0;
+        
+        E_dx = gtIx-testIx;
+        E_dy = gtIy-testIy;
+        E = sqrt(E_dx.*E_dx+E_dy.*E_dy);
+        E(gtValid==0) = 0;
+        
+        MSEResults = sum(E(:))/ sum(sum(gtValid)) ;
+        PEPNResults = sum(sum(E> 3)) / sum(sum(gtValid)) * 100;
+ 
 end

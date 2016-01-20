@@ -6,8 +6,10 @@ GTPath = cfg.gt_flow;
 TestPath = cfg.results_flow;
 [testImages, ~] = LoadFlowResults(TestPath, gtNames);
 
-display('Computing MSE.....');
-[MSEResults, PEPNResults] = MSEImages(testImages, groundTruth)
+for i = 1: length(testImages)
+    display('Computing MSE.....');
+    [Lk{i}.MSEResults, Lk{i}.PEPNResults] = MSEImages(testImages{i}, groundTruth{i});
+end
 
 % PEPNResults = PEPN(testImages, groundTruth)
 
@@ -16,13 +18,13 @@ display('Computing MSE.....');
 
 
 %% Task 7
-% Plot the optical flow
-
-for index = 1:length(testImages)
-    
-    % Read real image
-    [real_img, map] = imread([cfg.images_flow gtNames{index}]);
-    
-    % Plot Optical Flow results
-    plotOpticalFlow(real_img, map, testImages{index});
-end
+% % Plot the optical flow
+% 
+% for index = 1:length(testImages)
+%     
+%     % Read real image
+%     [real_img, map] = imread([cfg.images_flow gtNames{index}]);
+%     
+%     % Plot Optical Flow results
+%     plotOpticalFlow(real_img, map, testImages{index});
+% end

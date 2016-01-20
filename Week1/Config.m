@@ -4,9 +4,9 @@ function [ config ] = Config()
 
 
 %% MODIFY
-path_highway = '../Highway';
+path_highway = '../Data/Highway';
 
-path_flow = '../opticalFlow';
+path_flow =  '../../Data/OpticalFlow/';
 
 
 %%
