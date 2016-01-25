@@ -8,8 +8,8 @@ TseqName = 'traffic';
 TnumTrainingFrames = length(cfg.traffic.trainFrames);
 
 
-traffic.train = cellfun(@(c) double(rgb2gray(c)), Ttrain, 'UniformOutput', false);
-traffic.test = cellfun(@(c) double(rgb2gray(c)), Ttest, 'UniformOutput', false);
+traffic.train = Ttrain;%cellfun(@(c) double(rgb2gray(c)), Ttrain, 'UniformOutput', false);
+traffic.test = Ttest; %cellfun(@(c) double(rgb2gray(c)), Ttest, 'UniformOutput', false);
 traffic.gt = [TgtTrain, TgtTest];
 traffic.seqName = TseqName;
 traffic.numTrainingFrames = TnumTrainingFrames;

@@ -1,5 +1,5 @@
 function [finalConvexIMG, finalConvexGT] = ...
-    SeparateDesiredMovFromShake(sequence, gtSequence, u1Sequence, v1Sequence)
+    SeparateDesiredMovFromShake(sequence, gtSequence, u1Sequence, v1Sequence, x, y)
 
 numFrames = length(sequence);
 [height, width] = size(sequence{1});
@@ -33,7 +33,7 @@ u1SmoothSequence = [];
 v1SmoothSequence = [];
 
 display('Smooth....')
-for k = 1:length(sequence)-1
+for k = 1:numFrames-1
     
     tstart = tic;
     % Smooth the motion 
@@ -43,7 +43,8 @@ for k = 1:length(sequence)-1
     v1SmoothSequence{k+1} = v1Smooth;
     
     % Recalculate the correspondences
-    [smoothPointsCurr, smoothPointsRef] = extractPointsFromOpticalFlow(u1Smooth, v1Smooth);
+    [smoothPointsCurr, smoothPointsRef] = ...
+        extractPointsFromOpticalFlow(u1Smooth, v1Smooth);
     
     
     % Using RANSAC to find outliers
@@ -60,16 +61,17 @@ for k = 1:length(sequence)-1
         xShakeMotion(k)=0;
         yShakeMotion(k)=0;
     else
-        [~, numOfInliers] = size(inliers);
+        numOfInliers = length(inliers);
 
         % Making two matrices for inliers in first and second images
         smoothPointsReferenceInliers = smoothPointsRef(:, inliers);
         smoothPointsCurrentInliers = smoothPointsCurr(:, inliers);
     
         % calculating the average movement
-        xShakeMotion(k) = xShakeMotion(k) + sum(smoothPointsCurrentInliers(2, :) - smoothPointsReferenceInliers(2, :))/numOfInliers;
-        yShakeMotion(k) = yShakeMotion(k) + sum(smoothPointsCurrentInliers(1, :) - smoothPointsReferenceInliers(1, :))/numOfInliers;
-
+        % xShakeMotion(k) = xShakeMotion(k) + sum(smoothPointsCurrentInliers(2, :) - smoothPointsReferenceInliers(2, :))/numOfInliers;
+        % yShakeMotion(k) = yShakeMotion(k) + sum(smoothPointsCurrentInliers(1, :) - smoothPointsReferenceInliers(1, :))/numOfInliers;
+        xShakeMotion(k) = mean(smoothPointsReferenceInliers(2, :) - smoothPointsCurrentInliers(2, :));
+        yShakeMotion(k) = mean(smoothPointsReferenceInliers(1, :) - smoothPointsCurrentInliers(1, :));
 
     end
 
@@ -96,7 +98,8 @@ for k = 1:length(sequence)-1
     finalConvexGT(startPoint(1)+1:startPoint(1)+height,...
                 startPoint(2)+1:startPoint(2)+width , k+1) =...
                 gtSequence{k+1};    
-            
+    imshow(finalConvexIMG(:, :, k)/255)      
+    pause(0.05)
     telapsed = toc(tstart);
     display(['Time ' num2str(k) ' frame: ' num2str(telapsed)])
 end

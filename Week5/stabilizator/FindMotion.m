@@ -10,7 +10,7 @@ v1Sequence = [];
 image.reference = sequence{1};
 
 % for each frame
-for k = 2:length(sequence)
+for k = 2:numFrames
 
     tstart = tic;
     % reading frames to be processed
@@ -27,7 +27,7 @@ for k = 2:length(sequence)
     [pointsCurrent, pointsReference] = extractPointsFromOpticalFlow(u1Frame, v1Frame);
     
     % Using RANSAC to find outliers
-    [H, inliers] = ransacfithomography_v2(pointsReference, pointsCurrent, 0.01);
+    [H, inliers] = ransacfithomography_v2(pointsCurrent, pointsReference, 0.01);
 
     if isequal(H, eye(3)) && inliers <= 1
         % Para control
@@ -39,7 +39,7 @@ for k = 2:length(sequence)
         % If no correspondences have been found, assign the previous
         % average movement to the current frame.
         % We guess that the frame is moving as the previuos frame
-        if (k==1)
+        if (k==2)
             x(k)=0;
             y(k)=0;
         else
@@ -55,9 +55,10 @@ for k = 2:length(sequence)
         
     
         % calculating the average movement
-        x(k-1) = x(k-1) + sum(pointsCurrentInliers(2, :) - pointsReferenceInliers(2, :))/numOfInliers;
-        y(k-1) = y(k-1) + sum(pointsCurrentInliers(1, :) - pointsReferenceInliers(1, :))/numOfInliers;
-
+%         x(k-1) = x(k-1) + sum(pointsCurrentInliers(2, :) - pointsReferenceInliers(2, :))/numOfInliers;
+%         y(k-1) = y(k-1) + sum(pointsCurrentInliers(1, :) - pointsReferenceInliers(1, :))/numOfInliers;
+        x(k-1) = mean(pointsReferenceInliers(2, :) - pointsCurrentInliers(2, :));
+        y(k-1) = mean(pointsReferenceInliers(1, :) - pointsCurrentInliers(1, :));
     end
     image.reference = image.current;
     telapsed = toc(tstart);

@@ -1,14 +1,15 @@
-function MultipleObjectTracking()
+function MultipleObjectTracking(sequence)
+
 % Create System objects used for reading video, detecting moving objects,
 % and displaying the results.
-obj = setupSystemObjects();
+obj = setupSystemObjects(sequence);
 
 tracks = initializeTracks(); % Create an empty array of tracks.
 
 nextId = 1; % ID of the next track
 
-% Detect moving objects, and track them across video frames.
-while ~isDone(obj.reader)
+% Detect moving objects, and track them across video frames
+for ii = 1:length(obj.reader.frames)
     frame = readFrame();
     [centroids, bboxes, mask] = detectObjects(frame);
     predictNewLocationsOfTracks();
@@ -23,39 +24,6 @@ while ~isDone(obj.reader)
     displayTrackingResults();
 end
 
-    function obj = setupSystemObjects()
-        
-        % Initialize Video I/O
-        % Create objects for reading a video from a file, drawing the tracked
-        % objects in each frame, and playing the video.
-        
-        % Create a video file reader.
-        obj.reader = vision.VideoFileReader('atrium.avi');
-        
-        % Create two video players, one to display the video,
-        % and one to display the foreground mask.
-        obj.videoPlayer = vision.VideoPlayer('Position', [20, 400, 700, 400]);
-        obj.maskPlayer = vision.VideoPlayer('Position', [740, 400, 700, 400]);
-        
-        % Create System objects for foreground detection and blob analysis
-        
-        % The foreground detector is used to segment moving objects from
-        % the background. It outputs a binary mask, where the pixel value
-        % of 1 corresponds to the foreground and the value of 0 corresponds
-        % to the background.
-        
-        obj.detector = vision.ForegroundDetector('NumGaussians', 3, ...
-            'NumTrainingFrames', 40, 'MinimumBackgroundRatio', 0.7);
-        
-        % Connected groups of foreground pixels are likely to correspond to moving
-        % objects.  The blob analysis System object is used to find such groups
-        % (called 'blobs' or 'connected components'), and compute their
-        % characteristics, such as area, centroid, and the bounding box.
-        
-        obj.blobAnalyser = vision.BlobAnalysis('BoundingBoxOutputPort', true, ...
-            'AreaOutputPort', true, 'CentroidOutputPort', true, ...
-            'MinimumBlobArea', 400);
-    end
 
     function tracks = initializeTracks()
         
@@ -70,18 +38,19 @@ end
     end
 
     function frame = readFrame()
-        frame = obj.reader.step();
+        frame = obj.reader.frames{obj.reader.index};
+        obj.reader.index = obj.reader.index + 1;
     end
     function [centroids, bboxes, mask] = detectObjects(frame)
         
         % Detect foreground.
-        mask = obj.detector.step(frame);
+        mask = ObjectDetector(frame, obj);%obj.detector.step(frame);
         
         % Apply morphological operations to remove noise and fill in holes.
         mask = imopen(mask, strel('rectangle', [3,3]));
         mask = imclose(mask, strel('rectangle', [15, 15]));
         mask = imfill(mask, 'holes');
-        
+        figure(1); imshow(mask)
         % Perform blob analysis to find connected components.
         [~, centroids, bboxes] = obj.blobAnalyser.step(mask);
     end
@@ -179,10 +148,16 @@ end
             
             centroid = centroids(i,:);
             bbox = bboxes(i, :);
-            
-            % Create a Kalman filter object.
-            kalmanFilter = configureKalmanFilter('ConstantVelocity', ...
-                centroid, [200, 50], [100, 25], 100);
+            % Initialize a track by creating a Kalman filter object when
+            % the object is detected for the first time.
+            % Param:
+            % motionModel, initialLocation, initialEstimateError,
+            % motionNoise, measurementNoise
+            kalmanFilter = configureKalmanFilter(...
+                obj.kalmanFilter.motionModel, centroid,...
+                obj.kalmanFilter.initialEstimateError, ...
+                obj.kalmanFilter.motionNoise, ...
+                obj.kalmanFilter.measurementNoise);
             
             % Create a new track.
             newTrack = struct(...
@@ -202,10 +177,11 @@ end
     end
     function displayTrackingResults()
         % Convert the frame and the mask to uint8 RGB.
+%         frame = im2uint8(frame);
         frame = im2uint8(frame);
         mask = uint8(repmat(mask, [1, 1, 3])) .* 255;
         
-        minVisibleCount = 8;
+        minVisibleCount = 2;
         if ~isempty(tracks)
             
             % Noisy detections tend to result in short-lived tracks.

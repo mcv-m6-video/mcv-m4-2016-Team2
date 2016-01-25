@@ -15,5 +15,5 @@ pointsA(2, :) = J;
 % It is the position of the correspondence point in the reference frame (backward
 % compensation)
 pointsB = zeros(2, length(I));
-pointsB(1, :) = I + u1(nonZero);
-pointsB(2, :) = J + v1(nonZero);
+pointsB(1, :) = I + v1(nonZero);
+pointsB(2, :) = J + u1(nonZero);

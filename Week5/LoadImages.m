@@ -4,5 +4,5 @@ function [ sequenceImages ] = LoadImages( path, sequenceIndices, prefix, extensi
 
 completePath  = arrayfun(@(c)sprintf('%s%s%06d.%s', path, prefix , c, extension) , sequenceIndices,...
                 'UniformOutput', false);
-sequenceImages = cellfun(@imread, completePath, 'UniformOutput', false);
+sequenceImages = cellfun(@(x) (imread(x)), completePath, 'UniformOutput', false);
 end

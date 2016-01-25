@@ -2,6 +2,7 @@ function [ config ] = Config()
 %CONFIG Summary of this function goes here
 %   Detailed explanation goes here
 
+
 config.pathToHighway = '../../Data/highway/';%'/imatge/alfaro/work/M4/Data/highway/';
 config.pathToTraffic = '../../Data/traffic/';%'/imatge/alfaro/work/M4/Data/traffic/';
 
@@ -27,10 +28,4 @@ config.highway.testFrames =    highwayMiddlePoint+1   :   highwayFrames(2);
 
 config.highway.inputPath =  [ config.pathToHighway 'input/' ];
 config.highway.gtPath =  [ config.pathToHighway 'groundtruth/' ];
-
-
-
-
-
-
 end

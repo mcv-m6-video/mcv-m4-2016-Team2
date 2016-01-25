@@ -1,15 +1,15 @@
-function traffic = LoadHighway(cfg)
+function highway = LoadHighway(cfg)
 
-Ttrain = LoadImages(cfg.highway.inputPath, cfg.traffic.trainFrames, 'in', 'jpg');
-Ttest = LoadImages(cfg.highway.inputPath, cfg.traffic.testFrames, 'in', 'jpg');
-TgtTest = LoadImages(cfg.highway.gtPath, cfg.traffic.testFrames, 'gt', 'png');
-TgtTrain = LoadImages(cfg.highway.gtPath, cfg.traffic.trainFrames, 'gt', 'png');
-TseqName = 'traffic';
-TnumTrainingFrames = length(cfg.highway.trainFrames);
+Htrain = LoadImages(cfg.highway.inputPath, cfg.traffic.trainFrames, 'in', 'jpg');
+Htest = LoadImages(cfg.highway.inputPath, cfg.traffic.testFrames, 'in', 'jpg');
+HgtTest = LoadImages(cfg.highway.gtPath, cfg.traffic.testFrames, 'gt', 'png');
+HgtTrain = LoadImages(cfg.highway.gtPath, cfg.traffic.trainFrames, 'gt', 'png');
+HseqName = 'highway';
+HnumTrainingFrames = length(cfg.highway.trainFrames);
 
 
-traffic.train = cellfun(@(c) double(rgb2gray(c)), Ttrain, 'UniformOutput', false);
-traffic.test = cellfun(@(c) double(rgb2gray(c)), Ttest, 'UniformOutput', false);
-traffic.gt = [TgtTrain, TgtTest];
-traffic.seqName = TseqName;
-traffic.numTrainingFrames = TnumTrainingFrames;
+highway.train = Htrain; %cellfun(@(c) double(rgb2gray(c)), Ttrain, 'UniformOutput', false);
+highway.test = Htest; %cellfun(@(c) double(rgb2gray(c)), Ttest, 'UniformOutput', false);
+highway.gt = [HgtTrain, HgtTest];
+highway.seqName = HseqName;
+highway.numTrainingFrames = HnumTrainingFrames;
