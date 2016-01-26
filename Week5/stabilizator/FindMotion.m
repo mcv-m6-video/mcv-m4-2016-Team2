@@ -7,6 +7,7 @@ y = zeros(numFrames-1,1);
 u1Sequence = [];
 v1Sequence = [];
 
+sequence = cellfun(@(x) im2double(rgb2gray(x)), sequence, 'UniformOutput', false);
 image.reference = sequence{1};
 
 % for each frame
