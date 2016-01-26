@@ -1,4 +1,4 @@
-function MultipleObjectTracking(sequence)
+function trackedObjs = MultipleObjectTracking(sequence)
 
 % Create System objects used for reading video, detecting moving objects,
 % and displaying the results.
@@ -7,6 +7,7 @@ obj = setupSystemObjects(sequence);
 tracks = initializeTracks(); % Create an empty array of tracks.
 
 nextId = 1; % ID of the next track
+trackedObjs = [];
 
 % Detect moving objects, and track them across video frames
 for ii = 1:length(obj.reader.frames)
@@ -46,13 +47,21 @@ end
         % Detect foreground.
         mask = ObjectDetector(frame, obj);%obj.detector.step(frame);
         
+        mask = mask & sequence.ROI; %imerode(sequence.ROI.ROI2, strel('square', 17));
         % Apply morphological operations to remove noise and fill in holes.
-        mask = imopen(mask, strel('rectangle', [3,3]));
-        mask = imclose(mask, strel('rectangle', [15, 15]));
-        mask = imfill(mask, 'holes');
-        figure(1); imshow(mask)
+        mask2 = mask;
+        mask = sequence.morphFiltering(mask)
+%         mask = imopen(mask, strel('rectangle', [7,7]));
+%         mask = imreconstruct(imerode(mask, strel('rectangle', [17 17])), mask);
+%         mask = bwconvhull(mask, 'objects', 8);
+%         mask = imopen(mask, strel('disk', 10));
+%         mask = imclose(mask, strel('disk', 20));
+%         mask = imclose(mask, strel('rectangle', [10 40]));
+%         mask = imfill(mask, 'holes');
+        figure(1); imshow(mask2)
         % Perform blob analysis to find connected components.
-        [~, centroids, bboxes] = obj.blobAnalyser.step(mask);
+        [~, centroids, bboxes, major] = obj.blobAnalyser.step(mask);
+        
     end
 
     function predictNewLocationsOfTracks()
@@ -110,6 +119,7 @@ end
             tracks(trackIdx).totalVisibleCount = ...
                 tracks(trackIdx).totalVisibleCount + 1;
             tracks(trackIdx).consecutiveInvisibleCount = 0;
+            trackedObjs{trackIdx}.centroid(end+1, :) = centroid;
         end
     end
     function updateUnassignedTracks()
@@ -125,7 +135,7 @@ end
             return;
         end
         
-        invisibleForTooLong = 20;
+        invisibleForTooLong = obj.tracking.invisibleForTooLong; %%20;
         ageThreshold = 8;
         
         % Compute the fraction of the track's age for which it was visible.
@@ -173,6 +183,14 @@ end
             
             % Increment the next id.
             nextId = nextId + 1;
+            
+            object.id = newTrack.id;
+            object.centroid = centroid;
+            if length(trackedObjs) < object.id
+                trackedObjs{end+1} = object;
+            else
+                trackedObjs{object.id} = object;
+            end
         end
     end
     function displayTrackingResults()
