@@ -28,4 +28,7 @@ config.highway.testFrames =    highwayMiddlePoint+1   :   highwayFrames(3);
 
 config.highway.inputPath =  [ config.pathToHighway 'input/' ];
 config.highway.gtPath =  [ config.pathToHighway 'groundtruth/' ];
+
+config.highway.shadowParam = [0.05, 0.3, 0.2, 0.3]; %%alphaV, betaV, thresS, thresH
+config.traffic.shadowParam = [0.05, 0.2, 0.2, 0.6]; %%alphaV, betaV, thresS, thresH
 end

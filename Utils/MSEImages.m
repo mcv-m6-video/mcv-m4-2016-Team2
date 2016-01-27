@@ -1,4 +1,4 @@
-function [ MSEResults, PEPNResults] = MSEImages(flow, groundTruth)
+function [ MSEResults, PEPNResults, E] = MSEImages(flow, groundTruth)
 
 
         %testI = testImages{index};
@@ -9,13 +9,13 @@ function [ MSEResults, PEPNResults] = MSEImages(flow, groundTruth)
         gtIy = (double(gtI(:,:,2)) - 2^15)/ 64;
         
         %For Lucas Kanade:
-%         testIxy = (double(flow(:,:,1:2)) - 2^15) ./ 64;
-%         testIx = testIxy(:,:,1);
-%         testIy = testIxy(:,:,2);
+        testIxy = (double(flow(:,:,1:2)) - 2^15) ./ 64;
+        testIx = testIxy(:,:,1);
+        testIy = testIxy(:,:,2);
 
         %For our results:
-        testIx = flow.Vx;
-        testIy = flow.Vy;
+%         testIx = flow.Vx;
+%         testIy = flow.Vy;
         
         gtValid = min(gtI(:,:,3),1);
         gtIx(gtValid==0) = 0;

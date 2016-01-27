@@ -20,11 +20,12 @@ config.traffic.gtPath =  [ config.pathToTraffic 'groundtruth/' ];
 
 config.kitti.inputPath = [ config.pathToKitti 'input/' ];
 config.kitti.gtPath = [ config.pathToKitti 'groundtruth/' ];
+config.kitti.results = [ config.pathToKitti 'results/' ];
 
 
-config.blockSize = 4;
+config.blockSize = 150;
 config.p = config.blockSize;
-config.methodBM = 'exhaustive'; % '3steps'
+config.methodBM = 'exhaustive'; %'exhaustive'; % '3steps'
 %%
 % Plotly
 addpath(genpath('../MATLAB-api-master'))

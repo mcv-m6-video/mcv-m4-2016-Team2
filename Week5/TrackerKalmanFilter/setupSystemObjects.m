@@ -21,9 +21,17 @@ obj.maskPlayer = vision.VideoPlayer('Position', [740, 400, 700, 400]);
 
 % obj.detector = vision.ForegroundDetector('NumGaussians', 3, ...
 %     'NumTrainingFrames', 40, 'MinimumBackgroundRatio', 0.7);
-obj.detector.gaussian = GaussianPerPixel( sequence.train);
+trainGray = cellfun(@(c) double(rgb2gray(c)), sequence.train, 'UniformOutput', false);
+obj.detector.gaussian = GaussianPerPixel(trainGray);
+trainHSV = cellfun(@(c) double(rgb2hsv(c)), sequence.train, 'UniformOutput', false);
+[trainH, trainS, trainV]  = obtainHSV (trainHSV); 
+obj.shadow.Hgaussian = GaussianPerPixel(trainH);
+obj.shadow.Sgaussian = GaussianPerPixel(trainS);
+obj.shadow.Vgaussian = GaussianPerPixel(trainV);
 obj.detector.alpha = 1.8;%cfg.alpha;
 obj.detector.rho = 0.2;%cfg.rho;
+
+obj.shadow.param = sequence.shadowParam;
 
 % Connected groups of foreground pixels are likely to correspond to moving
 % objects.  The blob analysis System object is used to find such groups
@@ -31,14 +39,26 @@ obj.detector.rho = 0.2;%cfg.rho;
 % characteristics, such as area, centroid, and the bounding box.
 
 obj.blobAnalyser = vision.BlobAnalysis('BoundingBoxOutputPort', true, ...
-    'AreaOutputPort', true, 'MajorAxisLengthOutputPort', true,  'CentroidOutputPort', true, ...
-    'MinimumBlobArea', 400);%, 'MaximumBlobArea', 900);
+    'AreaOutputPort', true, 'CentroidOutputPort', true, ...
+    'MinimumBlobArea',200);
+
+    %'AreaOutputPort', true, 'MajorAxisLengthOutputPort', true,  'CentroidOutputPort', true, ...
+    %'MinimumBlobArea', 400);%, 'MaximumBlobArea', 900);
+
 
 % Configuration options of Kalman Filter
 % switch from ConstantAcceleration to ConstantVelocity
-obj.kalmanFilter.motionModel = 'ConstantVelocity'; 
-obj.kalmanFilter.initialEstimateError = [200, 50];
-obj.kalmanFilter.motionNoise = [100, 25];
+% If MotionModel =='ConstantAcceleration' ('ConstantVelocity', initiEstiError and motionNoise must be a 3-element(2-elem)
+% vectors specifying the variance of location, the variance of velocity, and the variance of acceleration.
+obj.kalmanFilter.motionModel = 'ConstantAcceleration'; 
+obj.kalmanFilter.initialEstimateError = [100, 50, 10];
+
+% When you increase the motion noise, the Kalman filter 
+% relies more heavily on the incoming measurements than on its internal state. 
+obj.kalmanFilter.motionNoise = [100, 25, 10];
+
+% Increasing the measurement noise causes the Kalman filter to rely 
+% more on its internal state rather than the incoming measurements
 obj.kalmanFilter.measurementNoise = 100;
 
 obj.tracking.invisibleForTooLong = sequence.tracking.invisibleForTooLong; % 5 for traffic % default 20
