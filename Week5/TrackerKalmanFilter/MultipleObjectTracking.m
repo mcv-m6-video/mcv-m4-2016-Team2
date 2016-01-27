@@ -47,10 +47,10 @@ end
         % Detect foreground.
         mask = ObjectDetector(frame, obj);%obj.detector.step(frame);
         
-        mask = mask & sequence.ROI; %imerode(sequence.ROI.ROI2, strel('square', 17));
+        mask = mask & sequence.roi; %imerode(sequence.ROI.ROI2, strel('square', 17));
         % Apply morphological operations to remove noise and fill in holes.
         mask2 = mask;
-        mask = sequence.morphFiltering(mask)
+        mask = sequence.morphFiltering(mask);
 %         mask = imopen(mask, strel('rectangle', [7,7]));
 %         mask = imreconstruct(imerode(mask, strel('rectangle', [17 17])), mask);
 %         mask = bwconvhull(mask, 'objects', 8);
