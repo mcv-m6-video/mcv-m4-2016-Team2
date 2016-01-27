@@ -47,15 +47,14 @@ end
         % Detect foreground.
         mask = ObjectDetector(frame, obj);%obj.detector.step(frame);
         
+        mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
+           
         mask = mask & sequence.ROI; %imerode(sequence.ROI.ROI2, strel('square', 17));
         % Apply morphological operations to remove noise and fill in holes.
-        marker = imerode(mask, strel('rectangle', [4,4]));
-        mask = imreconstruct(marker, mask);
-        mask = imclose(mask, strel('rectangle', [7,7]));
-        mask = imopen(mask, strel('rectangle', [2,2]));
+        %mask = sequence.morphFiltering(mask);
         figure(1); imshow(mask)
         % Perform blob analysis to find connected components.
-        [~, centroids, bboxes, major] = obj.blobAnalyser.step(mask);
+        [~, centroids, bboxes] = obj.blobAnalyser.step(mask);
         
     end
 

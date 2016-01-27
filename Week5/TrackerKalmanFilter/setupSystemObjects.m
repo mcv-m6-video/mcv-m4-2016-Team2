@@ -21,9 +21,17 @@ obj.maskPlayer = vision.VideoPlayer('Position', [740, 400, 700, 400]);
 
 % obj.detector = vision.ForegroundDetector('NumGaussians', 3, ...
 %     'NumTrainingFrames', 40, 'MinimumBackgroundRatio', 0.7);
-obj.detector.gaussian = GaussianPerPixel( sequence.train);
+trainGray = cellfun(@(c) double(rgb2gray(c)), sequence.train, 'UniformOutput', false);
+obj.detector.gaussian = GaussianPerPixel(trainGray);
+trainHSV = cellfun(@(c) double(rgb2hsv(c)), sequence.train, 'UniformOutput', false);
+[trainH, trainS, trainV]  = obtainHSV (trainHSV); 
+obj.shadow.Hgaussian = GaussianPerPixel(trainH);
+obj.shadow.Sgaussian = GaussianPerPixel(trainS);
+obj.shadow.Vgaussian = GaussianPerPixel(trainV);
 obj.detector.alpha = 1.8;%cfg.alpha;
 obj.detector.rho = 0.2;%cfg.rho;
+
+obj.shadow.param = sequence.shadowParam;
 
 % Connected groups of foreground pixels are likely to correspond to moving
 % objects.  The blob analysis System object is used to find such groups
