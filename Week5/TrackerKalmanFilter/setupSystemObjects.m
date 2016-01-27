@@ -22,8 +22,8 @@ obj.maskPlayer = vision.VideoPlayer('Position', [740, 400, 700, 400]);
 % obj.detector = vision.ForegroundDetector('NumGaussians', 3, ...
 %     'NumTrainingFrames', 40, 'MinimumBackgroundRatio', 0.7);
 obj.detector.gaussian = GaussianPerPixel( sequence.train);
-obj.detector.alpha = 2;
-obj.detector.rho = 0.02;
+obj.detector.alpha = 1.8;%cfg.alpha;
+obj.detector.rho = 0.2;%cfg.rho;
 
 % Connected groups of foreground pixels are likely to correspond to moving
 % objects.  The blob analysis System object is used to find such groups
@@ -33,6 +33,10 @@ obj.detector.rho = 0.02;
 obj.blobAnalyser = vision.BlobAnalysis('BoundingBoxOutputPort', true, ...
     'AreaOutputPort', true, 'CentroidOutputPort', true, ...
     'MinimumBlobArea',200);
+
+    %'AreaOutputPort', true, 'MajorAxisLengthOutputPort', true,  'CentroidOutputPort', true, ...
+    %'MinimumBlobArea', 400);%, 'MaximumBlobArea', 900);
+
 
 % Configuration options of Kalman Filter
 % switch from ConstantAcceleration to ConstantVelocity
@@ -49,3 +53,7 @@ obj.kalmanFilter.motionNoise = [100, 25, 10];
 % more on its internal state rather than the incoming measurements
 obj.kalmanFilter.measurementNoise = 100;
 
+obj.tracking.invisibleForTooLong = sequence.tracking.invisibleForTooLong; % 5 for traffic % default 20
+
+% Speed estimation
+obj.speedEstimation.previousLocation = [];
