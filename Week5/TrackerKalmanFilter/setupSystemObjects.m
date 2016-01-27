@@ -32,12 +32,20 @@ obj.detector.rho = 0.02;
 
 obj.blobAnalyser = vision.BlobAnalysis('BoundingBoxOutputPort', true, ...
     'AreaOutputPort', true, 'CentroidOutputPort', true, ...
-    'MinimumBlobArea', 400);
+    'MinimumBlobArea',200);
 
 % Configuration options of Kalman Filter
 % switch from ConstantAcceleration to ConstantVelocity
-obj.kalmanFilter.motionModel = 'ConstantVelocity'; 
-obj.kalmanFilter.initialEstimateError = [200, 50];
-obj.kalmanFilter.motionNoise = [100, 25];
+% If MotionModel =='ConstantAcceleration' ('ConstantVelocity', initiEstiError and motionNoise must be a 3-element(2-elem)
+% vectors specifying the variance of location, the variance of velocity, and the variance of acceleration.
+obj.kalmanFilter.motionModel = 'ConstantAcceleration'; 
+obj.kalmanFilter.initialEstimateError = [100, 50, 10];
+
+% When you increase the motion noise, the Kalman filter 
+% relies more heavily on the incoming measurements than on its internal state. 
+obj.kalmanFilter.motionNoise = [100, 25, 10];
+
+% Increasing the measurement noise causes the Kalman filter to rely 
+% more on its internal state rather than the incoming measurements
 obj.kalmanFilter.measurementNoise = 100;
 

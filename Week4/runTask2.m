@@ -2,7 +2,7 @@
 cfg = Config();
 
 [kitti] = LoadKitti(cfg);
-cfg.p = 8;
+%cfg.p = 8;
 %% BLOCK MATCHING
 for i = 1:(length(kitti))
     display(['Sequence: ' num2str(i)])
@@ -11,8 +11,8 @@ for i = 1:(length(kitti))
     tstart = tic;
     kitti{i}.flowBM = BlockMatching(kitti{i},cfg);
     kitti{i}.telapsedBM = toc(tstart);
-    [kitti{i}.mmseBM, kitti{i}.pepnBM] = MSEImages(kitti{i}.flowBM, kitti{i}.gt);
-%     kitti{i}.compensatedImageBM = BackwardMotionCompensation(kitti{i}.reference, kitti{i}.flowBM);
+    [kitti{i}.mmseBM, kitti{i}.pepnBM, kitti{i}.E] = MSEImages(kitti{i}.flowBM, kitti{i}.gt);
+    kitti{i}.compensatedImageBM = BackwardMotionCompensation(kitti{i}.reference, kitti{i}.flowBM);
 %     kitti{i}.pepnBM = pepn(kitti{i}.compensatedImageBM, kitti{i}.current);
 %     kitti{i}.mmseBM = immse(kitti{i}.compensatedImageBM, im2double(kitti{i}.current));
 end

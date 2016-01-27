@@ -47,9 +47,10 @@ end
         mask = ObjectDetector(frame, obj);%obj.detector.step(frame);
         
         % Apply morphological operations to remove noise and fill in holes.
-        mask = imopen(mask, strel('rectangle', [3,3]));
-        mask = imclose(mask, strel('rectangle', [15, 15]));
-        mask = imfill(mask, 'holes');
+        marker = imerode(mask, strel('rectangle', [4,4]));
+        mask = imreconstruct(marker, mask);
+        mask = imclose(mask, strel('rectangle', [7,7]));
+        mask = imopen(mask, strel('rectangle', [2,2]));
         figure(1); imshow(mask)
         % Perform blob analysis to find connected components.
         [~, centroids, bboxes] = obj.blobAnalyser.step(mask);
@@ -125,8 +126,8 @@ end
             return;
         end
         
-        invisibleForTooLong = 20;
-        ageThreshold = 8;
+        invisibleForTooLong = 5;
+        ageThreshold = 5;
         
         % Compute the fraction of the track's age for which it was visible.
         ages = [tracks(:).age];
@@ -181,7 +182,7 @@ end
         frame = im2uint8(frame);
         mask = uint8(repmat(mask, [1, 1, 3])) .* 255;
         
-        minVisibleCount = 2;
+        minVisibleCount = 5;
         if ~isempty(tracks)
             
             % Noisy detections tend to result in short-lived tracks.
