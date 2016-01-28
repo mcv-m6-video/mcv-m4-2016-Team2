@@ -46,17 +46,16 @@ end
         
         % Detect foreground.
         mask = ObjectDetector(frame, obj);%obj.detector.step(frame);
-
-        mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
-        mask = mask & sequence.roi; %imerode(sequence.ROI.ROI2, strel('square', 17));
+%         figure(1); imshow(mask)
+%         mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
+%         figure(2); imshow(mask)
+        mask = mask & sequence.ROI; 
+%         mask = mask & sequence.roi; %imerode(sequence.ROI.ROI2, strel('square', 17));
         % Apply morphological operations to remove noise and fill in holes.
         mask2 = mask;
         mask = sequence.morphFiltering(mask);
         figure(1); imshow(mask2)
 
-        mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
-           
-%         mask = mask & sequence.ROI; %imerode(sequence.ROI.ROI2, strel('square', 17));
         % Apply morphological operations to remove noise and fill in holes.
         %mask = sequence.morphFiltering(mask);
         figure(1); imshow(mask)
@@ -122,6 +121,8 @@ end
                 tracks(trackIdx).totalVisibleCount + 1;
             tracks(trackIdx).consecutiveInvisibleCount = 0;
             trackedObjs{trackIdx}.centroid(end+1, :) = centroid;
+%             tracks(trackIdx).consecutiveVisibleCount = ...
+%                 tracks(trackIdx).consecutiveVisibleCount + 1;
         end
     end
     function updateUnassignedTracks()
@@ -130,6 +131,7 @@ end
             tracks(ind).age = tracks(ind).age + 1;
             tracks(ind).consecutiveInvisibleCount = ...
                 tracks(ind).consecutiveInvisibleCount + 1;
+%             tracks(trackIdx).consecutiveVisibleCount = 0;
         end
     end
     function deleteLostTracks()
@@ -151,6 +153,14 @@ end
         
         % Delete lost tracks.
         tracks = tracks(~lostInds);
+        if lostInds > 0
+            for speedIdx = 1:length(lostInds)
+                trackHistorial = trackedObjs{lostInds(speedIdx)};
+                speed = speedEstimation(trackHistorial, sequence.H, ...
+                                        sequence.px2m, sequence.fps);
+                trackedObjs{lostInds(speedIdx)}.speed = speed;
+            end
+        end
     end
     function createNewTracks()
         centroids = centroids(unassignedDetections, :);

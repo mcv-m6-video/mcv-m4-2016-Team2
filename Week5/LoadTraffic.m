@@ -13,4 +13,4 @@ traffic.test = Ttest; %cellfun(@(c) double(rgb2gray(c)), Ttest, 'UniformOutput',
 traffic.gt = [TgtTrain, TgtTest];
 traffic.seqName = TseqName;
 traffic.numTrainingFrames = TnumTrainingFrames;
-traffic.roi = imread(cfg.traffic.roiPath);
+% traffic.roi = imread(cfg.traffic.roiPath);

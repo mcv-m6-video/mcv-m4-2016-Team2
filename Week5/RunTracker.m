@@ -1,5 +1,5 @@
 cfg = Config();
-seq = 'highway';
+seq = 'traffic';
 
 
 if strcmp(seq, 'traffic')
@@ -7,20 +7,29 @@ if strcmp(seq, 'traffic')
     sequence = LoadTraffic(cfg);
     filteringTraffic = @(x) TrafficFiltering(x);
     sequence.tracking.invisibleForTooLong = 5;
-    sequence.ROI = load('ROI.mat');
+    load('ROIT.mat');
+    sequence.ROI = roi;
     sequence.morphFiltering = filteringTraffic;
     sequence.shadowParam = cfg.traffic.shadowParam;
-
+    sequence.minimumBlobArea = 480;
+    load('HTraffic.mat');
+    sequence.H = H;
+    sequence.px2m = 12; 
+    sequence.fps = 12;
 elseif strcmp(seq, 'highway')
     % Highway
     sequence = LoadHighway(cfg);
     filteringHighway = @(x) HighwayFiltering(x);
     sequence.tracking.invisibleForTooLong = 5;
-    sequence.tracking.invisibleForTooLong = 5;
     load('ROIH.mat');
     sequence.ROI = roi;
     sequence.morphFiltering = filteringHighway;
     sequence.shadowParam = cfg.highway.shadowParam;
+    sequence.minimumBlobArea = 300; % (?)
+    load('HHighway.mat');
+    sequence.H = H;
+    sequence.px2m = 12; 
+    sequence.fps = 12;
 end
 
 trackedObjects = MultipleObjectTracking(sequence);
