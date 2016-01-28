@@ -236,14 +236,18 @@ deleteAllTracks();
                 [tracks(:).totalVisibleCount] > minVisibleCount;
             reliableTracks = tracks(reliableTrackInds);
             
-            speeds=[];
+            speeds={[]};
             for i=1:length(reliableTracks)
                 % Speed estimation
                 trackHistorial = trackedObjs{reliableTracks(i).id};
-                speed = speedEstimation(trackHistorial, sequence.H, ...
-                                        sequence.px2m, sequence.fps);
-                trackedObjs{reliableTracks(i).id}.speed = speed;
-                speeds{end+1} = ['  ' num2str(speed)];
+                if size(trackHistorial.centroid, 1) > 1
+                    speed = speedEstimation(trackHistorial, sequence.H, ...
+                                            sequence.px2m, sequence.fps);
+                    trackedObjs{reliableTracks(i).id}.speed = speed;
+                    speeds{i} = ['  ' num2str(speed)];
+                else
+                    speeds{i} = ['  ' num2str(0)];
+                end
             end
                 
             % Display the objects. If an object has not been detected
@@ -263,7 +267,7 @@ deleteAllTracks();
                     [reliableTracks(:).consecutiveInvisibleCount] > 0;
                 isPredicted = cell(size(labels));
                 isPredicted(predictedTrackInds) = {'  predicted'};
-                labels = strcat(labels, speeds, isPredicted);
+                labels = strcat(labels, speeds', isPredicted);
                 
                 
                 
