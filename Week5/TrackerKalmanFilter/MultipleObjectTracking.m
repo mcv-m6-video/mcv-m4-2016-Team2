@@ -46,13 +46,24 @@ end
         
         % Detect foreground.
         mask = ObjectDetector(frame, obj);%obj.detector.step(frame);
-        
-        mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
-           
-        mask = mask & sequence.ROI; %imerode(sequence.ROI.ROI2, strel('square', 17));
+        mask = mask & sequence.ROI;
+        %mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
+        figure(1); imshow(mask)   
+        %imerode(sequence.ROI.ROI2, strel('square', 17));
         % Apply morphological operations to remove noise and fill in holes.
-        %mask = sequence.morphFiltering(mask);
-        figure(1); imshow(mask)
+        mask = sequence.morphFiltering(mask);
+        %figure(2); imshow(mask)
+
+%         mask = obj.detector.step(frame);    
+%         mask = mask & sequence.ROI;
+%         figure(1); imshow(mask)
+%         
+%         mask = imopen(mask, strel('rectangle', [3, 3]));
+%         mask = imclose(mask, strel('rectangle', [10, 10]));
+%         mask = imfill(mask, 'holes');
+        %mask = bwconvhull(mask, 'objects', 8);
+
+
         % Perform blob analysis to find connected components.
         [~, centroids, bboxes] = obj.blobAnalyser.step(mask);
         
@@ -193,7 +204,7 @@ end
         frame = im2uint8(frame);
         mask = uint8(repmat(mask, [1, 1, 3])) .* 255;
         
-        minVisibleCount = 5;
+        minVisibleCount = 0;
         if ~isempty(tracks)
             
             % Noisy detections tend to result in short-lived tracks.
