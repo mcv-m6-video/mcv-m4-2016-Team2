@@ -6,7 +6,7 @@ function [ config ] = Config()
 config.pathToHighway = '../../Data/highway/';%'/imatge/alfaro/work/M4/Data/highway/';
 config.pathToTraffic = '../../Data/traffic/';%'/imatge/alfaro/work/M4/Data/traffic/';
 
-trafficFrames = [950  1050 1200];%1570];
+trafficFrames = [950  1050 1570];
 highwayFrames = [1050 1350 1700];
 
 
@@ -19,7 +19,7 @@ config.traffic.testFrames =    trafficMiddlePoint+1   :   trafficFrames(3);
 
 config.traffic.inputPath =  [ config.pathToTraffic 'input/' ];
 config.traffic.gtPath =  [ config.pathToTraffic 'groundtruth/' ];
-
+config.traffic.roiPath = [config.pathToTraffic 'ROI.png'];
 
 highwayMiddlePoint =    round(highwayFrames(1) + (highwayFrames(2) - highwayFrames(1)) *trainTestSplit);
 
@@ -30,5 +30,5 @@ config.highway.inputPath =  [ config.pathToHighway 'input/' ];
 config.highway.gtPath =  [ config.pathToHighway 'groundtruth/' ];
 
 config.highway.shadowParam = [0.05, 0.3, 0.2, 0.3]; %%alphaV, betaV, thresS, thresH
-config.traffic.shadowParam = [0.05, 0.2, 0.2, 0.6]; %%alphaV, betaV, thresS, thresH
+config.traffic.shadowParam = [0.15, 0.5, 0.2, 0.3]; %%alphaV, betaV, thresS, thresH
 end

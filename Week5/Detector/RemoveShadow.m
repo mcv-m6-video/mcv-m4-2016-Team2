@@ -21,7 +21,7 @@ result = masks;
 Vdivision = I(:,:,3)./Vgaussian.mean;
 
 maskV = alphaV< Vdivision & Vdivision<= betaV;
-maskV = bwconvhull(maskV, 'objects', 4);
+% maskV = bwconvhull(maskV, 'objects', 4);
 %maskV = imfill(maskV, 'holes');
 
 maskS = (I(:,:,2) - Sgaussian.mean) <= thresS;
@@ -34,10 +34,11 @@ maskH = imfill(maskH, 'holes');
 
 result(maskV & maskS & maskH & mask) = 0; 
 
-% subplot(2,2,1), title('maskV'), imshow(maskV & mask)
-% subplot(2,2,2), title('maskS'), imshow(maskS & mask),
-% subplot(2,2,3), title('maskH'), imshow(maskH & mask),
-% subplot(2,2,4), title('result'), imshow(maskV & maskS & maskH & mask);
+% figure()
+subplot(2,2,1), title('maskV'), imshow(maskV & mask)
+subplot(2,2,2), title('maskS'), imshow(maskS & mask),
+subplot(2,2,3), title('maskH'), imshow(maskH & mask),
+subplot(2,2,4), title('result'), imshow(maskV & maskS & maskH & mask);
 
 end
 

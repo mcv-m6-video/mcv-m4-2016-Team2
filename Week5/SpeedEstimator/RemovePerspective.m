@@ -1,4 +1,4 @@
-function y = RemovePerspective(image, H, s)
+function y = RemovePerspective(img, H, s)
 % s: it is a row vector indicating the size of the output image
 
 y = uint8(zeros(s(1), s(2), 3));
@@ -15,9 +15,9 @@ for r = 1:s(1)
         
         cc = round(cim);
         rr = round(rim);
-        if cc>0 && cc<=size(image, 2) && rr>0 && r<=size(image, 1)
-            y(r, c, :) = image(rr, cc, :);
+        if cc>0 && cc<=size(img, 2) && rr>0 && rr<=size(img, 1)
+            y(r, c, :) = img(rr, cc, :);
         end
     end
 end
-figure;imshow(y)
+% figure;imshow(y)

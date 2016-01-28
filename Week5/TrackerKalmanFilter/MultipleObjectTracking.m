@@ -25,6 +25,8 @@ for ii = 1:length(obj.reader.frames)
     displayTrackingResults();
 end
 
+deleteAllTracks();
+
 
     function tracks = initializeTracks()
         
@@ -45,24 +47,13 @@ end
     function [centroids, bboxes, mask] = detectObjects(frame)
         
         % Detect foreground.
-        mask = ObjectDetector(frame, obj);%obj.detector.step(frame);
-        mask = mask & sequence.ROI;
-        %mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
-        figure(1); imshow(mask)   
-        %imerode(sequence.ROI.ROI2, strel('square', 17));
+        mask = ObjectDetector(frame, obj);
+%         mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
+        mask = mask & sequence.ROI; 
         % Apply morphological operations to remove noise and fill in holes.
+%         mask2 = mask;
         mask = sequence.morphFiltering(mask);
-        %figure(2); imshow(mask)
-
-%         mask = obj.detector.step(frame);    
-%         mask = mask & sequence.ROI;
-%         figure(1); imshow(mask)
-%         
-%         mask = imopen(mask, strel('rectangle', [3, 3]));
-%         mask = imclose(mask, strel('rectangle', [10, 10]));
-%         mask = imfill(mask, 'holes');
-        %mask = bwconvhull(mask, 'objects', 8);
-
+%         figure(1); imshow(mask2)
 
         % Perform blob analysis to find connected components.
         [~, centroids, bboxes] = obj.blobAnalyser.step(mask);
@@ -124,6 +115,7 @@ end
             tracks(trackIdx).totalVisibleCount = ...
                 tracks(trackIdx).totalVisibleCount + 1;
             tracks(trackIdx).consecutiveInvisibleCount = 0;
+            trackIdx = tracks(trackIdx).id;
             trackedObjs{trackIdx}.centroid(end+1, :) = centroid;
         end
     end
@@ -152,8 +144,34 @@ end
         lostInds = (ages < ageThreshold & visibility < 0.6) | ...
             [tracks(:).consecutiveInvisibleCount] >= invisibleForTooLong;
         
+        
+        if lostInds > 0
+            for speedIdx = 1:length(lostInds)
+                trackHistorial = trackedObjs{tracks(lostInds(speedIdx)).id};
+                speed = speedEstimation(trackHistorial, sequence.H, ...
+                                        sequence.px2m, sequence.fps);
+                trackedObjs{tracks(lostInds(speedIdx)).id}.speed = speed;
+                
+            end
+        end
+        
+        
         % Delete lost tracks.
         tracks = tracks(~lostInds);
+    end
+    function deleteAllTracks()
+        if isempty(tracks)
+            return;
+        end
+        
+        numTracks = length(tracks);
+        for i = 1:numTracks
+            trackHistorial = trackedObjs{tracks(i).id};
+            speed = speedEstimation(trackHistorial, sequence.H, ...
+                sequence.px2m, sequence.fps);
+            trackedObjs{tracks(lostInds(speedIdx)).id}.speed = speed;
+            
+        end
     end
     function createNewTracks()
         centroids = centroids(unassignedDetections, :);
