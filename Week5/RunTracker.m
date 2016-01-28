@@ -7,11 +7,11 @@ if strcmp(seq, 'traffic')
     sequence = LoadTraffic(cfg);
     filteringTraffic = @(x) TrafficFiltering(x);
     sequence.tracking.invisibleForTooLong = 5;
-    load('ROIT.mat');
+    load('ROIT2.mat');
     sequence.ROI = roi;
     sequence.morphFiltering = filteringTraffic;
     sequence.shadowParam = cfg.traffic.shadowParam;
-    sequence.minimumBlobArea = 480;
+    sequence.minimumBlobArea = 600;
     load('HTraffic.mat');
     sequence.H = H;
     sequence.px2m = 12; 

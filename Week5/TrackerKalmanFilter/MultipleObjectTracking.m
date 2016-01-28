@@ -46,16 +46,24 @@ deleteAllTracks();
     end
     function [centroids, bboxes, mask] = detectObjects(frame)
         
-        % Detect foreground.
+%         % Detect foreground.
         mask = ObjectDetector(frame, obj);
 %         mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
-        mask = mask & sequence.ROI; 
+        mask = mask & imerode(sequence.ROI, strel('square', 30)); 
         % Apply morphological operations to remove noise and fill in holes.
-%         mask2 = mask;
+        mask2 = mask;
         mask = sequence.morphFiltering(mask);
 %         figure(1); imshow(mask2)
-
-
+%         pause(0.1)
+%         mask = obj.detector.step(frame);
+% %         mask = RemoveShadow(frame, mask, obj);
+%         mask = mask & imerode(sequence.ROI, strel('square', 30)); 
+%         % Apply morphological operations to remove noise and fill in holes.
+%         mask = bwareaopen(mask, 11, 8);
+% %         mask = imopen(mask, strel('rectangle', [3,3]));
+%         mask = imclose(mask, strel('rectangle', [15, 15]));
+%         mask = imfill(mask, 'holes');
+        
         % Perform blob analysis to find connected components.
         [~, centroids, bboxes] = obj.blobAnalyser.step(mask);
         
@@ -88,6 +96,8 @@ deleteAllTracks();
         end
         
         % Solve the assignment problem.
+        % NOTA CAMBIAR ESTO PARA QUE CUANDO HAYAN DOS DETECCIONES DEL MISMO
+        % COCHE SOLO SE ASIGNE A UNO
         costOfNonAssignment = 20;
         [assignments, unassignedTracks, unassignedDetections] = ...
             assignDetectionsToTracks(cost, costOfNonAssignment);
@@ -116,6 +126,9 @@ deleteAllTracks();
             tracks(trackIdx).totalVisibleCount = ...
                 tracks(trackIdx).totalVisibleCount + 1;
             tracks(trackIdx).consecutiveInvisibleCount = 0;
+            
+            % Se guarda la posicion del centroide una vez corregida. Esta
+            % es la funcion para detecciones asignadas
             trackIdx = tracks(trackIdx).id;
             trackedObjs{trackIdx}.centroid(end+1, :) = centroid;
         end
@@ -124,8 +137,9 @@ deleteAllTracks();
         for i = 1:length(unassignedTracks)
             ind = unassignedTracks(i);
             tracks(ind).age = tracks(ind).age + 1;
+            display(num2str(tracks(ind).id))
             tracks(ind).consecutiveInvisibleCount = ...
-                tracks(ind).consecutiveInvisibleCount + 1;
+               tracks(ind).consecutiveInvisibleCount + 1;
         end
     end
     function deleteLostTracks()
@@ -223,7 +237,7 @@ deleteAllTracks();
         frame = im2uint8(frame);
         mask = uint8(repmat(mask, [1, 1, 3])) .* 255;
         
-        minVisibleCount = 5;
+        minVisibleCount = 1;
         if ~isempty(tracks)
             
             % Noisy detections tend to result in short-lived tracks.
@@ -233,6 +247,16 @@ deleteAllTracks();
                 [tracks(:).totalVisibleCount] > minVisibleCount;
             reliableTracks = tracks(reliableTrackInds);
             
+            speeds=[];
+            for i=1:length(reliableTracks)
+                % Speed estimation
+                trackHistorial = trackedObjs{reliableTracks(i).id};
+                speed = speedEstimation(trackHistorial, sequence.H, ...
+                                        sequence.px2m, sequence.fps);
+                trackedObjs{reliableTracks(i).id}.speed = speed;
+                speeds{end+1} = ['  ' num2str(speed)];
+            end
+                
             % Display the objects. If an object has not been detected
             % in this frame, display its predicted bounding box.
             if ~isempty(reliableTracks)
@@ -249,8 +273,10 @@ deleteAllTracks();
                 predictedTrackInds = ...
                     [reliableTracks(:).consecutiveInvisibleCount] > 0;
                 isPredicted = cell(size(labels));
-                isPredicted(predictedTrackInds) = {' predicted'};
-                labels = strcat(labels, isPredicted);
+                isPredicted(predictedTrackInds) = {'  predicted'};
+                labels = strcat(labels, speeds, isPredicted);
+                
+                
                 
                 % Draw the objects on the frame.
                 frame = insertObjectAnnotation(frame, 'rectangle', ...
