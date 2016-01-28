@@ -1,6 +1,6 @@
 function [vmY, vmX]=SearchAlgorithm3steps(reference, currentBlock, point, cfg)
 % Design parameters
-p=7;
+p=cfg.blockSize;
 blockSize = cfg.blockSize;
 
 L = floor(log10(p+1)/log10(2));

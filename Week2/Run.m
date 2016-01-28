@@ -26,10 +26,10 @@ if cfg.grayscale
         display('Adaptative............')
         display('Highway sequence............')
         [highway] = RunSequenceAdaptive(highway, cfg);
-        display('Fall sequence................')
-        [fall] = RunSequenceAdaptive(fall, cfg);
-        display('Traffic sequence..............')
-        [traffic] = RunSequenceAdaptive(traffic, cfg);
+%         display('Fall sequence................')
+%         [fall] = RunSequenceAdaptive(fall, cfg);
+%         display('Traffic sequence..............')
+%         [traffic] = RunSequenceAdaptive(traffic, cfg);
     end
     
     if cfg.gmm

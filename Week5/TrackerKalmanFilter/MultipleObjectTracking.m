@@ -25,6 +25,8 @@ for ii = 1:length(obj.reader.frames)
     displayTrackingResults();
 end
 
+deleteAllTracks();
+
 
     function tracks = initializeTracks()
         
@@ -44,23 +46,15 @@ end
     end
     function [centroids, bboxes, mask] = detectObjects(frame)
         
-        % Detect foreground.
-        mask = ObjectDetector(frame, obj);%obj.detector.step(frame);
-        
-        mask = mask & sequence.ROI; %imerode(sequence.ROI.ROI2, strel('square', 17));
+%         % Detect foreground.
+        mask = ObjectDetector(frame, obj);
+%         mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
+        mask = mask & imerode(sequence.ROI, strel('square', 30)); 
         % Apply morphological operations to remove noise and fill in holes.
-        mask2 = mask;
-        mask = sequence.morphFiltering(mask)
-%         mask = imopen(mask, strel('rectangle', [7,7]));
-%         mask = imreconstruct(imerode(mask, strel('rectangle', [17 17])), mask);
-%         mask = bwconvhull(mask, 'objects', 8);
-%         mask = imopen(mask, strel('disk', 10));
-%         mask = imclose(mask, strel('disk', 20));
-%         mask = imclose(mask, strel('rectangle', [10 40]));
-%         mask = imfill(mask, 'holes');
-        figure(1); imshow(mask2)
+        mask = sequence.morphFiltering(mask);
+%         figure(1); imshow(mask)
         % Perform blob analysis to find connected components.
-        [~, centroids, bboxes, major] = obj.blobAnalyser.step(mask);
+        [~, centroids, bboxes] = obj.blobAnalyser.step(mask);
         
     end
 
@@ -91,6 +85,8 @@ end
         end
         
         % Solve the assignment problem.
+        % NOTA CAMBIAR ESTO PARA QUE CUANDO HAYAN DOS DETECCIONES DEL MISMO
+        % COCHE SOLO SE ASIGNE A UNO
         costOfNonAssignment = 20;
         [assignments, unassignedTracks, unassignedDetections] = ...
             assignDetectionsToTracks(cost, costOfNonAssignment);
@@ -119,6 +115,10 @@ end
             tracks(trackIdx).totalVisibleCount = ...
                 tracks(trackIdx).totalVisibleCount + 1;
             tracks(trackIdx).consecutiveInvisibleCount = 0;
+            
+            % Se guarda la posicion del centroide una vez corregida. Esta
+            % es la funcion para detecciones asignadas
+            trackIdx = tracks(trackIdx).id;
             trackedObjs{trackIdx}.centroid(end+1, :) = centroid;
         end
     end
@@ -126,8 +126,9 @@ end
         for i = 1:length(unassignedTracks)
             ind = unassignedTracks(i);
             tracks(ind).age = tracks(ind).age + 1;
+            display(num2str(tracks(ind).id))
             tracks(ind).consecutiveInvisibleCount = ...
-                tracks(ind).consecutiveInvisibleCount + 1;
+               tracks(ind).consecutiveInvisibleCount + 1;
         end
     end
     function deleteLostTracks()
@@ -147,8 +148,34 @@ end
         lostInds = (ages < ageThreshold & visibility < 0.6) | ...
             [tracks(:).consecutiveInvisibleCount] >= invisibleForTooLong;
         
+        
+        if lostInds > 0
+            for speedIdx = 1:length(lostInds)
+                trackHistorial = trackedObjs{tracks(lostInds(speedIdx)).id};
+                speed = speedEstimation(trackHistorial, sequence.H, ...
+                                        sequence.px2m, sequence.fps);
+                trackedObjs{tracks(lostInds(speedIdx)).id}.speed = speed;
+                
+            end
+        end
+        
+        
         % Delete lost tracks.
         tracks = tracks(~lostInds);
+    end
+    function deleteAllTracks()
+        if isempty(tracks)
+            return;
+        end
+        
+        numTracks = length(tracks);
+        for i = 1:numTracks
+            trackHistorial = trackedObjs{tracks(i).id};
+            speed = speedEstimation(trackHistorial, sequence.H, ...
+                sequence.px2m, sequence.fps);
+            trackedObjs{tracks(lostInds(speedIdx)).id}.speed = speed;
+            
+        end
     end
     function createNewTracks()
         centroids = centroids(unassignedDetections, :);
@@ -199,7 +226,7 @@ end
         frame = im2uint8(frame);
         mask = uint8(repmat(mask, [1, 1, 3])) .* 255;
         
-        minVisibleCount = 2;
+        minVisibleCount = 0;
         if ~isempty(tracks)
             
             % Noisy detections tend to result in short-lived tracks.
@@ -209,6 +236,16 @@ end
                 [tracks(:).totalVisibleCount] > minVisibleCount;
             reliableTracks = tracks(reliableTrackInds);
             
+            speeds=[];
+            for i=1:length(reliableTracks)
+                % Speed estimation
+                trackHistorial = trackedObjs{reliableTracks(i).id};
+                speed = speedEstimation(trackHistorial, sequence.H, ...
+                                        sequence.px2m, sequence.fps);
+                trackedObjs{reliableTracks(i).id}.speed = speed;
+                speeds{end+1} = ['  ' num2str(speed)];
+            end
+                
             % Display the objects. If an object has not been detected
             % in this frame, display its predicted bounding box.
             if ~isempty(reliableTracks)
@@ -225,8 +262,10 @@ end
                 predictedTrackInds = ...
                     [reliableTracks(:).consecutiveInvisibleCount] > 0;
                 isPredicted = cell(size(labels));
-                isPredicted(predictedTrackInds) = {' predicted'};
-                labels = strcat(labels, isPredicted);
+                isPredicted(predictedTrackInds) = {'  predicted'};
+                labels = strcat(labels, speeds, isPredicted);
+                
+                
                 
                 % Draw the objects on the frame.
                 frame = insertObjectAnnotation(frame, 'rectangle', ...
