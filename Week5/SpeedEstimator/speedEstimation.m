@@ -1,9 +1,9 @@
 function speed = speedEstimation(trackHistorial, H, px2m, fps)
 
-initPoint1 = trackHistorial.centroid(2, :);
-endPoint1 = trackHistorial.centroid(end-1, :);
+initPoint1 = trackHistorial.centroid(1, :);
+endPoint1 = trackHistorial.centroid(end, :);
 
-numFrames = size(trackHistorial.centroid, 1)-2;
+numFrames = size(trackHistorial.centroid, 1);
 
 initPoint1H = makehomogeneous(initPoint1');
 initPoint2H = H*initPoint1H;

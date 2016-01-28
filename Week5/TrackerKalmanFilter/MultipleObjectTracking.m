@@ -121,6 +121,8 @@ end
                 tracks(trackIdx).totalVisibleCount + 1;
             tracks(trackIdx).consecutiveInvisibleCount = 0;
             trackedObjs{trackIdx}.centroid(end+1, :) = centroid;
+            trackIdx = tracks(trackIdx).id;
+            trackedObjs{trackIdx}.centroid(end+1, :) = centroid;
 %             tracks(trackIdx).consecutiveVisibleCount = ...
 %                 tracks(trackIdx).consecutiveVisibleCount + 1;
         end
@@ -151,16 +153,16 @@ end
         lostInds = (ages < ageThreshold & visibility < 0.6) | ...
             [tracks(:).consecutiveInvisibleCount] >= invisibleForTooLong;
         
-        % Delete lost tracks.
-        tracks = tracks(~lostInds);
         if lostInds > 0
             for speedIdx = 1:length(lostInds)
-                trackHistorial = trackedObjs{lostInds(speedIdx)};
+                trackHistorial = trackedObjs{tracks(lostInds(speedIdx)).id};
                 speed = speedEstimation(trackHistorial, sequence.H, ...
                                         sequence.px2m, sequence.fps);
-                trackedObjs{lostInds(speedIdx)}.speed = speed;
+                trackedObjs{tracks(lostInds(speedIdx)).id}.speed = speed;
             end
         end
+        % Delete lost tracks.
+        tracks = tracks(~lostInds);
     end
     function createNewTracks()
         centroids = centroids(unassignedDetections, :);

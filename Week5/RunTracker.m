@@ -15,7 +15,7 @@ if strcmp(seq, 'traffic')
     load('HTraffic.mat');
     sequence.H = H;
     sequence.px2m = 12; 
-    sequence.fps = 12;
+    sequence.fps = 25; %30
 elseif strcmp(seq, 'highway')
     % Highway
     sequence = LoadHighway(cfg);
