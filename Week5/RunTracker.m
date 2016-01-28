@@ -7,7 +7,7 @@ if strcmp(seq, 'traffic')
     sequence = LoadTraffic(cfg);
     filteringTraffic = @(x) TrafficFiltering(x);
     sequence.tracking.invisibleForTooLong = 5;
-    load('ROIT.mat');
+    load('ROIT2.mat');
     sequence.ROI = roi;
     sequence.morphFiltering = filteringTraffic;
     sequence.shadowParam = cfg.traffic.shadowParam;

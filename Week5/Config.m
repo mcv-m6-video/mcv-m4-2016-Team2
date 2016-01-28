@@ -4,7 +4,7 @@ function [ config ] = Config()
 
 
 config.pathToHighway = '../../Data/highway/';%'/imatge/alfaro/work/M4/Data/highway/';
-config.pathToTraffic = '../../Data/traffic/';%'/imatge/alfaro/work/M4/Data/traffic/';
+config.pathToTraffic = '../../Data/trafficStab/';%'/imatge/alfaro/work/M4/Data/traffic/';
 
 trafficFrames = [950  1050 1570];
 highwayFrames = [1050 1350 1700];

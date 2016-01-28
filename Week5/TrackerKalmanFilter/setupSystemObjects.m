@@ -20,7 +20,7 @@ obj.maskPlayer = vision.VideoPlayer('Position', [740, 400, 700, 400]);
 % to the background.
 
 % obj.detector = vision.ForegroundDetector('NumGaussians', 3, ...
-%     'NumTrainingFrames', 40, 'MinimumBackgroundRatio', 0.7);
+%     'NumTrainingFrames', 50, 'MinimumBackgroundRatio', 0.9);
 trainGray = cellfun(@(c) double(rgb2gray(c)), sequence.train, 'UniformOutput', false);
 obj.detector.gaussian = GaussianPerPixel(trainGray);
 trainHSV = cellfun(@(c) double(rgb2hsv(c)), sequence.train, 'UniformOutput', false);
@@ -30,7 +30,6 @@ obj.shadow.Sgaussian = GaussianPerPixel(trainS);
 obj.shadow.Vgaussian = GaussianPerPixel(trainV);
 obj.detector.alpha = sequence.alpha;%cfg.alpha;
 obj.detector.rho = sequence.rho;%cfg.rho;
-
 obj.shadow.param = sequence.shadowParam;
 
 % Connected groups of foreground pixels are likely to correspond to moving
@@ -51,6 +50,7 @@ obj.blobAnalyser = vision.BlobAnalysis('BoundingBoxOutputPort', true, ...
 % If MotionModel =='ConstantAcceleration' ('ConstantVelocity', initiEstiError and motionNoise must be a 3-element(2-elem)
 % vectors specifying the variance of location, the variance of velocity, and the variance of acceleration.
 obj.kalmanFilter.motionModel = 'ConstantVelocity'; 
+
 obj.kalmanFilter.initialEstimateError = [150, 50];
 
 %obj.detector = vision.ForegroundDetector('NumGaussians', 3,...
