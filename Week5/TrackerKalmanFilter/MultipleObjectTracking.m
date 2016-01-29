@@ -25,7 +25,7 @@ for ii = 1:length(obj.reader.frames)
     displayTrackingResults();
 end
 
-deleteAllTracks();
+
 
 
     function tracks = initializeTracks()
@@ -48,8 +48,12 @@ deleteAllTracks();
         
 %         % Detect foreground.
         mask = ObjectDetector(frame, obj);
-%         mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
-        mask = mask & imerode(sequence.ROI, strel('square', 30)); 
+        mask = mask & sequence.ROI;%& imerode(sequence.ROI, strel('square', 30));
+        if (obj.reader.index > 160)
+            figure(3);imshow(mask);
+        end
+        mask = RemoveShadow(frame, mask, obj);%obj.detector.step(frame);
+         
         % Apply morphological operations to remove noise and fill in holes.
         mask = sequence.morphFiltering(mask);
 %         figure(1); imshow(mask)
@@ -137,7 +141,7 @@ deleteAllTracks();
         end
         
         invisibleForTooLong = obj.tracking.invisibleForTooLong; %%20;
-        ageThreshold = 8;
+        ageThreshold = 5;
         
         % Compute the fraction of the track's age for which it was visible.
         ages = [tracks(:).age];
@@ -162,20 +166,6 @@ deleteAllTracks();
         
         % Delete lost tracks.
         tracks = tracks(~lostInds);
-    end
-    function deleteAllTracks()
-        if isempty(tracks)
-            return;
-        end
-        
-        numTracks = length(tracks);
-        for i = 1:numTracks
-            trackHistorial = trackedObjs{tracks(i).id};
-            speed = speedEstimation(trackHistorial, sequence.H, ...
-                sequence.px2m, sequence.fps);
-            trackedObjs{tracks(lostInds(speedIdx)).id}.speed = speed;
-            
-        end
     end
     function createNewTracks()
         centroids = centroids(unassignedDetections, :);
